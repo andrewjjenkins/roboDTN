@@ -1,6 +1,9 @@
 roboDTN/bin
 roboDTN/gen
+roboDTNTest/bin
+roboDTNTest/gen
 
 
 # Eclipse stuff we don't need to check in.
 roboDTN/.settings/org.eclipse.jdt.core.prefs
+roboDTNTest/.settings/org.eclipse.jdt.core.prefs
