@@ -1,0 +1,81 @@
+package com.ajj.robodtn;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.lang.String;
+
+public class BundleDict {
+	public BundleDict(SdnvDataInputStream stream) throws IOException {
+		/* Read the length of the dictionary and check for sanity. */
+		long longLen = stream.readSdnv();
+		if(longLen > Integer.MAX_VALUE) throw new IOException("Dictionary " + longLen + " bytes; too long");
+		len = (int) longLen;
+		
+		/* Read the dictionary. */
+		if (len != 0) {
+			bytes = new byte[len];
+			stream.readFully(bytes, 0, len);
+		} else {
+			bytes = null;
+		}
+	}
+	
+	public int getLength() { return len; }
+	
+	private String cbheEidString(long so, long sspo) {
+		if(so == 0 && sspo == 0) { return "dtn:none"; }
+		else { return "ipn:" + so + "." + sspo; }
+	}
+	
+	private String dtnEidString(long so, long sspo) 
+			throws MalformedBundleException {
+		
+		int s_len = 0;
+		int ssp_len = 0;
+		
+		if (so > Integer.MAX_VALUE || sspo > Integer.MAX_VALUE) {
+			throw new MalformedBundleException("EID offsets too big");
+		}
+		if (so >= bytes.length) {
+			throw new MalformedBundleException("EID scheme offset " + so 
+					+ " outside dictionary (" + bytes.length + ")");
+		}
+		if (sspo >= bytes.length) {
+			throw new MalformedBundleException("EID scheme specific part offset " 
+					+ sspo + " outside dictionary (" + bytes.length + ")");
+		}
+		
+		for(s_len = 0; bytes[(int) so + s_len] != 0 && so + s_len < bytes.length; s_len++);
+		for(ssp_len = 0; bytes[(int) sspo + ssp_len] != 0 && sspo + ssp_len < bytes.length; ssp_len++);
+		
+		try {
+			String eid = new String(bytes, (int) so, s_len, "US-ASCII") + ":" +
+						 new String(bytes, (int) sspo, ssp_len, "US-ASCII");
+			return eid;
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException("Can't use US-ASCII encoding");
+		}
+	}
+	
+	public void setEids(Bundle b, long dst_so, long dst_sspo, long src_so, long src_sspo,
+			long rptto_so, long rptto_sspo, long cust_so, long cust_sspo) 
+			throws MalformedBundleException, UnsupportedEncodingException {
+
+		if(len == 0) {
+			/* CBHE */
+			b.dst   = cbheEidString(dst_so, dst_sspo);
+			b.src   = cbheEidString(src_so, src_sspo);
+			b.rptto = cbheEidString(rptto_so, rptto_sspo);
+			b.cust  = cbheEidString(cust_so, cust_sspo);
+		} else {
+			/* DTN2-style EIDs */
+			b.dst   = dtnEidString(dst_so, dst_sspo);
+			b.src   = dtnEidString(src_so, src_sspo);
+			b.rptto = dtnEidString(rptto_so, rptto_sspo);
+			b.cust  = dtnEidString(cust_so, cust_sspo);
+		}
+	}
+	
+	private int len;
+	private byte [] bytes;
+}
