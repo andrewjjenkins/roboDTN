@@ -1,12 +1,15 @@
-package com.ajj.robodtn;
+package com.ajj.robodtn.acquire;
 
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.String;
 
-public class BundleDict {
-	public BundleDict(SdnvDataInputStream stream) throws IOException, MalformedBundleException {
+import com.ajj.robodtn.Bundle;
+import com.ajj.robodtn.Malformity;
+
+public class AcquireBundleDict {
+	public AcquireBundleDict(SdnvDataInputStream stream) throws IOException, MalformedBundleException {
 		/* Read the length of the dictionary and check for sanity. */
 		long longLen = stream.readSdnv();
 		if(longLen > Integer.MAX_VALUE) throw new IOException("Dictionary " + longLen + " bytes; too long");

@@ -1,4 +1,6 @@
-package com.ajj.robodtn;
+package com.ajj.robodtn.acquire;
+
+import com.ajj.robodtn.Malformity;
 
 public class MalformedBundleException extends Exception {
 	private static final long serialVersionUID = 1870019398876452908L;

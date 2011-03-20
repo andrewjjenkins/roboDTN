@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 
-import com.ajj.robodtn.BpAcquisitionStream;
 import com.ajj.robodtn.Bundle;
-import com.ajj.robodtn.MalformedBundleException;
 import com.ajj.robodtn.Malformity;
+import com.ajj.robodtn.acquire.BpAcquisitionStream;
+import com.ajj.robodtn.acquire.MalformedBundleException;
 
 import android.content.res.*;
 import android.test.InstrumentationTestCase;

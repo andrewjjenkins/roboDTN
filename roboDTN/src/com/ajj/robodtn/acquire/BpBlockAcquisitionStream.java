@@ -1,8 +1,11 @@
-package com.ajj.robodtn;
+package com.ajj.robodtn.acquire;
 
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
+
+import com.ajj.robodtn.BundleBlock;
+import com.ajj.robodtn.Malformity;
 
 public class BpBlockAcquisitionStream extends SdnvDataInputStream {
 	public BpBlockAcquisitionStream(InputStream in) {

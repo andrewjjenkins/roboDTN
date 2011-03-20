@@ -1,4 +1,4 @@
-package com.ajj.robodtn;
+package com.ajj.robodtn.acquire;
 
 import java.io.DataInputStream;
 import java.io.IOException;

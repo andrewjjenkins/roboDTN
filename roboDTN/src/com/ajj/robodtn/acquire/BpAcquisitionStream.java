@@ -1,9 +1,13 @@
-package com.ajj.robodtn;
+package com.ajj.robodtn.acquire;
 
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
+
+import com.ajj.robodtn.Bundle;
+import com.ajj.robodtn.BundleBlock;
+import com.ajj.robodtn.Malformity;
 
 public class BpAcquisitionStream extends SdnvDataInputStream {
 
@@ -45,7 +49,7 @@ public class BpAcquisitionStream extends SdnvDataInputStream {
 			/* Read more of the PBB */
 			b.createSeq = readSdnv();
 			b.lifetime  = readSdnv();
-			b.dict      = new BundleDict(this);
+			b.dict      = new AcquireBundleDict(this);
 			b.dict.setEids(b, dst_so, dst_sspo, src_so, src_sspo, rptto_so, rptto_sspo, cust_so, cust_sspo);
 			
 			/* If payload is a frag, read these two fields. */

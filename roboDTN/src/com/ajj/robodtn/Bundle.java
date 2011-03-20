@@ -2,6 +2,8 @@ package com.ajj.robodtn;
 
 import java.util.Date;
 
+import com.ajj.robodtn.acquire.AcquireBundleDict;
+
 public class Bundle {
 	/* Bundle characterization flags: RFC5050 */
 	public static final long FRAG =           1 << 0;
@@ -40,7 +42,7 @@ public class Bundle {
 	public Date createTimestamp;
 	public long createSeq;
 	public long lifetime;
-	public BundleDict dict;
+	public AcquireBundleDict dict;
 	
 	/* Fragment fields: RFC5050
 	 * Only useful if bundle is a fragment */	
