@@ -7,6 +7,7 @@ import java.util.Date;
 import com.ajj.robodtn.BpAcquisitionStream;
 import com.ajj.robodtn.Bundle;
 import com.ajj.robodtn.MalformedBundleException;
+import com.ajj.robodtn.Malformity;
 
 import android.content.res.*;
 import android.test.InstrumentationTestCase;
@@ -44,12 +45,12 @@ public class BpAcquisitionStreamTest extends InstrumentationTestCase {
 		InputStream in;
 		AssetManager am = getInstrumentation().getContext().getAssets();
 		Bundle b;
-		
+
 		for(int i = 0; i < testpairs.length; i++) {
 			tp = testpairs[i];
 			in = am.open(tp.acqAsset);
 			b = new BpAcquisitionStream(in).readBundle();
-			
+
 			assertEquals(b.procFlags, tp.bundle.procFlags);
 			assertEquals(b.src, tp.bundle.src);
 			assertEquals(b.dst, tp.bundle.dst);
@@ -58,7 +59,7 @@ public class BpAcquisitionStreamTest extends InstrumentationTestCase {
 			assertEquals(b.createTimestamp, tp.bundle.createTimestamp);
 			assertEquals(b.createSeq, tp.bundle.createSeq);
 			assertEquals(b.lifetime, tp.bundle.lifetime);
-			
+
 			if ((b.procFlags & Bundle.FRAG) != 0) {
 				assertEquals(b.fragOffset, tp.bundle.fragOffset);
 				assertEquals(b.aduLength, tp.bundle.aduLength);
@@ -68,22 +69,44 @@ public class BpAcquisitionStreamTest extends InstrumentationTestCase {
 	
 	private class MalformedAcquisitionTestPair {
 		public String acqAsset;
-		public MalformedBundleException expectedException;
+		public Malformity expectedMalformity;
+
+		public MalformedAcquisitionTestPair(String acqAsset, Malformity expectedMalformity) {
+			this.acqAsset = acqAsset;
+			this.expectedMalformity = expectedMalformity;
+		}
 	}
 	
 	private MalformedAcquisitionTestPair [] malformedtestpairs = {
-		new MalformedAcquisitionTestPair("testbundles/dicttooshort", )
-	}
+		new MalformedAcquisitionTestPair("testbundles/dicttooshort", Malformity.DICTTOOSHORT),
+		new MalformedAcquisitionTestPair("testbundles/eidrefnotindict", Malformity.EIDREFNOTINDICT),
+		new MalformedAcquisitionTestPair("testbundles/invalid-version", Malformity.INVALIDVERSION),
+		new MalformedAcquisitionTestPair("testbundles/nolastblock", Malformity.NOLASTBLOCK),
+		new MalformedAcquisitionTestPair("testbundles/toomanypayloads", Malformity.TOOMANYPAYLOADS),
+		new MalformedAcquisitionTestPair("testbundles/tooshort", Malformity.TOOSHORT),
+		new MalformedAcquisitionTestPair("testbundles/tooshort2", Malformity.TOOSHORT),
+		new MalformedAcquisitionTestPair("testbundles/tooshort3", Malformity.TOOSHORT)
+	};
 	
 	public void testMalformedAcquisitions() throws IOException {
 		MalformedAcquisitionTestPair tp;
 		InputStream in;
 		AssetManager am = getInstrumentation().getContext().getAssets();
-		Bundle b;
 		
 		for(int i = 0; i < malformedtestpairs.length; i++) {
 			tp = malformedtestpairs[i];
-			tp.expectedException.
+			in = am.open(tp.acqAsset);
+
+			try {
+				new BpAcquisitionStream(in).readBundle();
+
+				/* If we get here, no exception, which means the parsing didn't
+				 * detect the malformed bundle. */
+				fail("Did not get expected exception " + tp.expectedMalformity.toString()
+						+ " from test bundle " + tp.acqAsset);
+			} catch (MalformedBundleException mbe) {
+				assertEquals(mbe.getMalformity(), tp.expectedMalformity);
+			}
 		}
 	}
 }

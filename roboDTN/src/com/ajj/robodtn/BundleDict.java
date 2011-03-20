@@ -5,10 +5,14 @@ import java.io.UnsupportedEncodingException;
 import java.lang.String;
 
 public class BundleDict {
-	public BundleDict(SdnvDataInputStream stream) throws IOException {
+	public BundleDict(SdnvDataInputStream stream) throws IOException, MalformedBundleException {
 		/* Read the length of the dictionary and check for sanity. */
 		long longLen = stream.readSdnv();
 		if(longLen > Integer.MAX_VALUE) throw new IOException("Dictionary " + longLen + " bytes; too long");
+		if(longLen > 0 && longLen < 3) {
+			throw new MalformedBundleException(Malformity.DICTTOOSHORT, 
+					"Dictionary " + longLen + " bytes; too short");
+		}
 		len = (int) longLen;
 		
 		/* Read the dictionary. */
@@ -34,19 +38,19 @@ public class BundleDict {
 		int ssp_len = 0;
 		
 		if (so > Integer.MAX_VALUE || sspo > Integer.MAX_VALUE) {
-			throw new MalformedBundleException("EID offsets too big");
+			throw new MalformedBundleException(Malformity.EIDREFNOTINDICT, "EID offsets too big");
 		}
 		if (so >= bytes.length) {
-			throw new MalformedBundleException("EID scheme offset " + so 
-					+ " outside dictionary (" + bytes.length + ")");
+			throw new MalformedBundleException(Malformity.EIDREFNOTINDICT,
+					"EID scheme offset " + so + " outside dictionary (" + bytes.length + ")");
 		}
 		if (sspo >= bytes.length) {
-			throw new MalformedBundleException("EID scheme specific part offset " 
-					+ sspo + " outside dictionary (" + bytes.length + ")");
+			throw new MalformedBundleException(Malformity.EIDREFNOTINDICT,
+					"EID scheme specific part offset " + sspo + " outside dictionary (" + bytes.length + ")");
 		}
 		
-		for(s_len = 0; bytes[(int) so + s_len] != 0 && so + s_len < bytes.length; s_len++);
-		for(ssp_len = 0; bytes[(int) sspo + ssp_len] != 0 && sspo + ssp_len < bytes.length; ssp_len++);
+		for(s_len = 0; so + s_len < bytes.length && bytes[(int) so + s_len] != 0; s_len++);
+		for(ssp_len = 0; sspo + ssp_len < bytes.length && bytes[(int) sspo + ssp_len] != 0; ssp_len++);
 		
 		try {
 			String eid = new String(bytes, (int) so, s_len, "US-ASCII") + ":" +
