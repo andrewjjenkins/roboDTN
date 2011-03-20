@@ -14,7 +14,7 @@ public class SdnvDataInputStreamTest extends TestCase {
 		for(int i = 0; i < st.testpairs.length; i++) {
 			SdnvDataInputStream is = new SdnvDataInputStream(
 							new ByteArrayInputStream(st.testpairs[i].bytes));
-			assert(is.readSdnv() == st.testpairs[i].value);
+			assertEquals(st.testpairs[i].value, is.readSdnv());
 		}
 	}
 }
