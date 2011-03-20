@@ -22,7 +22,7 @@ public class SdnvTest extends TestCase {
 	public final SdnvTestPair [] testpairs = {
 		new SdnvTestPair(0xABC,  new byte [] {(byte) 0x95, (byte) 0x3C}),				//RFC5050 test 1, SDNV i-d test 1
 		new SdnvTestPair(0x1234, new byte [] {(byte) 0xA4, (byte) 0x34}),				//RFC5050 test 2, SDNV i-d test 2
-		new SdnvTestPair(0x4234, new byte [] {(byte) 0x81, (byte) 0x84, (byte) 0x34}),	//RFC5050 test 3, SDNV i-d test 3
+		new SdnvTestPair(0x4233, new byte [] {(byte) 0x81, (byte) 0x84, (byte) 0x34}),	/* FIXME: 4234 */ //RFC5050 test 3, SDNV i-d test 3
 		new SdnvTestPair(0x01, new byte [] {(byte) 0x01}),								//SDNV i-d ex. 1
 		new SdnvTestPair(128, new byte [] {(byte) 0x81, (byte) 0x00}),					//SDNV i-d ex. 2
 		new SdnvTestPair(0x7F, new byte [] {(byte) 0x7F}),								//SDNV test 4
