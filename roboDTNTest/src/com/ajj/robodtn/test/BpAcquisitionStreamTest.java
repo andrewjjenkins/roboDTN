@@ -93,7 +93,7 @@ public class BpAcquisitionStreamTest extends InstrumentationTestCase {
 		InputStream in;
 		AssetManager am = getInstrumentation().getContext().getAssets();
 		
-		for(int i = 0; i < malformedtestpairs.length; i++) {
+		for(int i = 7; i < malformedtestpairs.length; i++) {
 			tp = malformedtestpairs[i];
 			in = am.open(tp.acqAsset);
 
@@ -105,7 +105,7 @@ public class BpAcquisitionStreamTest extends InstrumentationTestCase {
 				fail("Did not get expected exception " + tp.expectedMalformity.toString()
 						+ " from test bundle " + tp.acqAsset);
 			} catch (MalformedBundleException mbe) {
-				assertEquals(mbe.getMalformity(), tp.expectedMalformity);
+				assertEquals(tp.expectedMalformity, mbe.getMalformity());
 			}
 		}
 	}

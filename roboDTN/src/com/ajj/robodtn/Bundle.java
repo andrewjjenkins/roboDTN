@@ -1,8 +1,6 @@
 package com.ajj.robodtn;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.TreeMap;
 
 public class Bundle {
 	/* Bundle characterization flags: RFC5050 */
@@ -50,7 +48,7 @@ public class Bundle {
 	public long aduLength;
 	
 	/* Bundle Blocks (aka Extension Blocks) */
-	public TreeMap<Integer, ArrayList<BundleBlock>> blocks = new TreeMap<Integer, ArrayList<BundleBlock>>();
+	public BundleBlocks blocks = new BundleBlocks();
 
 	public Bundle(long procFlags, String dst, String src,
 			String rptto, String cust, Date createTimestamp, long createSeq,

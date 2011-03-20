@@ -20,7 +20,7 @@ public class SdnvDataInputStream extends DataInputStream {
 			if (v > Long.MAX_VALUE>>7) {
 				throw new NumberFormatException("SDNV is bigger than " + Long.MAX_VALUE);
 			}
-			b = in.read();
+			b = readUnsignedByte();
 			v <<=7;
 			v |= b & 0x7F;
 			if ((b & 0x80) == 0) return v;

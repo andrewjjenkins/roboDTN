@@ -1,5 +1,6 @@
 package com.ajj.robodtn;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.String;
@@ -18,7 +19,12 @@ public class BundleDict {
 		/* Read the dictionary. */
 		if (len != 0) {
 			bytes = new byte[len];
-			stream.readFully(bytes, 0, len);
+			try {
+				stream.readFully(bytes, 0, len);
+			} catch (EOFException e) {
+				throw new MalformedBundleException(Malformity.TOOSHORT,
+						"EOF before finished reading " + len + " bytes of dictionary");
+			}
 		} else {
 			bytes = null;
 		}
