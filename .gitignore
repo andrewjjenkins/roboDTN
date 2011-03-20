@@ -3,6 +3,11 @@ roboDTN/gen
 roboDTNTest/bin
 roboDTNTest/gen
 
+# Android stuff that's only useful locally
+roboDTN/local.properties
+roboDTN/proguard.cfg
+roboDTNTest/local.properties
+roboDTNTest/proguard.cfg
 
 # Eclipse stuff we don't need to check in.
 roboDTN/.settings/org.eclipse.jdt.core.prefs
