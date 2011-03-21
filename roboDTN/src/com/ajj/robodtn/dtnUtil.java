@@ -1,6 +1,16 @@
 package com.ajj.robodtn;
 
+import java.util.Date;
+
+import android.text.format.Time;
+
 public final class dtnUtil {
+	public static Date iso8601ToDate(String isoDate) {
+		Time t = new Time();
+		t.parse3339(isoDate);
+		return new Date(t.toMillis(true));
+	}
+	
 	public static byte[] hexStringToByteArray(String sWithWhitespace) {
 		String s = sWithWhitespace.replaceAll("\\s", "");
 	    int len = s.length();

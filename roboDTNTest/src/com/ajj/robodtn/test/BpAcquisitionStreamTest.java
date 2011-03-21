@@ -2,8 +2,7 @@ package com.ajj.robodtn.test;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Date;
-
+import com.ajj.robodtn.dtnUtil;
 import com.ajj.robodtn.Bundle;
 import com.ajj.robodtn.Malformity;
 import com.ajj.robodtn.acquire.BpAcquisitionStream;
@@ -11,15 +10,8 @@ import com.ajj.robodtn.acquire.MalformedBundleException;
 
 import android.content.res.*;
 import android.test.InstrumentationTestCase;
-import android.text.format.Time;
 
 public class BpAcquisitionStreamTest extends InstrumentationTestCase {
-	private static Date iso8601ToDate(String isoDate) {
-		Time t = new Time();
-		t.parse3339(isoDate);
-		return new Date(t.toMillis(true));
-	}
-	
 	private class AcquisitionTestPair {
 		public AcquisitionTestPair(String acqAsset, Bundle bundle) {
 			this.acqAsset = acqAsset;
@@ -32,11 +24,11 @@ public class BpAcquisitionStreamTest extends InstrumentationTestCase {
 	private final AcquisitionTestPair [] testpairs = {
 		new AcquisitionTestPair("testbundles/ionbundle", 
 			new Bundle(0x94, "ipn:1.1", "ipn:1.0", "dtn:none", "dtn:none", 
-					iso8601ToDate("2009-04-27T00:05:47Z"), 1, 300, 0, 0)),
+					dtnUtil.iso8601ToDate("2009-04-27T00:05:47Z"), 1, 300, 0, 0)),
 		new AcquisitionTestPair("testbundles/dtn2bundle",
 			new Bundle(0x90, "dtn://destination/app", "dtn://syme.dtn/source", 
 					"dtn://syme.dtn/source", "dtn:none", 
-					iso8601ToDate("2011-01-30T02:24:16Z"),
+					dtnUtil.iso8601ToDate("2011-01-30T02:24:16Z"),
 					2, 60, 0, 0))
 	};
 	
