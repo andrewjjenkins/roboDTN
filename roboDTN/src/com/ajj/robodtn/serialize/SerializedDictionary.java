@@ -95,7 +95,7 @@ public class SerializedDictionary {
 		}
 	}
 	
-	private byte [] bytes = null;
+	public byte [] bytes = null;
 	public EidPartReference dst_so = new EidPartReference();
 	public EidPartReference dst_sspo = new EidPartReference();
 	public EidPartReference src_so = new EidPartReference();
