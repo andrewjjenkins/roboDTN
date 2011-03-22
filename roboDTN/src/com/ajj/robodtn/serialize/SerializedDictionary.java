@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
+import java.util.regex.Pattern;
 
 import com.ajj.robodtn.Bundle;
 
@@ -14,7 +15,32 @@ public class SerializedDictionary {
 		serialize(b);
 	}
 	
-	private void serialize(Bundle b) throws MalformedEidException {
+	/* Escape any characters that are specials in regular expressions. */
+	private static final String cbheSchemename = "ipn";
+	private static final Pattern cbheablePattern = Pattern.compile(cbheSchemename + ":(\\d+)\\.(\\d+)");
+	
+	/* Returns true if the dictionary can be CBHE-encoded */
+	private static boolean canBeCbhe(Bundle b) {
+		if (!cbheablePattern.matcher(b.dst).matches()) return false;
+		if (!cbheablePattern.matcher(b.src).matches()) return false;
+		if (!cbheablePattern.matcher(b.rptto).matches()) return false;
+		if (!cbheablePattern.matcher(b.cust).matches()) return false;
+		return true;
+	}
+	
+	/* Serializes a dictionary that is known to be CBHE-able. */
+	private void serializeCbhe(Bundle b) {
+		dst_so.set(Long.parseLong(cbheablePattern.matcher(b.dst).group(0)));
+		dst_sspo.set(Long.parseLong(cbheablePattern.matcher(b.dst).group(1)));
+		src_so.set(Long.parseLong(cbheablePattern.matcher(b.src).group(0)));
+		src_sspo.set(Long.parseLong(cbheablePattern.matcher(b.src).group(1)));
+		rptto_so.set(Long.parseLong(cbheablePattern.matcher(b.rptto).group(0)));
+		rptto_sspo.set(Long.parseLong(cbheablePattern.matcher(b.rptto).group(1)));
+		cust_so.set(Long.parseLong(cbheablePattern.matcher(b.cust).group(0)));
+		cust_sspo.set(Long.parseLong(cbheablePattern.matcher(b.cust).group(1)));
+	}
+	
+	private void serializeFullDictionary(Bundle b) throws MalformedEidException {
 		/* This will avoid storing duplicate EID scheme-names or scheme-specific-parts.
 		 * There is an NP-hard compression scheme that isn't attempted here. */
 		LinkedHashMap<String, ArrayList<EidPartReference>> dictSet = 
@@ -66,6 +92,17 @@ public class SerializedDictionary {
 			bytes[cursor + part_bytes.length] = 0;
 			cursor += part_bytes.length + 1;
 		}
+	}
+	
+	private void serialize(Bundle b) throws MalformedEidException {
+		/* First try to serialize using CBHE. */
+		if (canBeCbhe(b)) {
+			serializeCbhe(b);
+			return;
+		}
+		
+		/* Otherwise serialize as a full dictionary. */
+		serializeFullDictionary(b);
 	}
 	
 	private static void addEidParts(String eid, LinkedHashMap<String, ArrayList<EidPartReference>> dictSet,
