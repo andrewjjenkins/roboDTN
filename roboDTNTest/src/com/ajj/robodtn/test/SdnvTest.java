@@ -10,7 +10,7 @@ public class SdnvTest extends TestCase {
 		
 	}
 	
-	public class SdnvTestPair {
+	public static class SdnvTestPair {
 		public SdnvTestPair(long value, byte [] bytes) {
 			this.value = value;
 			this.bytes = bytes;
@@ -19,7 +19,7 @@ public class SdnvTest extends TestCase {
 		public byte [] bytes;
 	}
 	
-	public final SdnvTestPair [] testpairs = {
+	public static final SdnvTestPair [] testpairs = new SdnvTestPair [] {
 		new SdnvTestPair(0xABC,  new byte [] {(byte) 0x95, (byte) 0x3C}),				//RFC5050 test 1, SDNV i-d test 1
 		new SdnvTestPair(0x1234, new byte [] {(byte) 0xA4, (byte) 0x34}),				//RFC5050 test 2, SDNV i-d test 2
 		new SdnvTestPair(0x4234, new byte [] {(byte) 0x81, (byte) 0x84, (byte) 0x34}),	//RFC5050 test 3, SDNV i-d test 3
@@ -28,6 +28,8 @@ public class SdnvTest extends TestCase {
 		new SdnvTestPair(0x7F, new byte [] {(byte) 0x7F}),								//SDNV test 4
 		new SdnvTestPair(0x90, new byte [] {(byte) 0x81, (byte) 0x10})
 	};
+	
+
 	
 	public void testSdnvs() {
 		// Verify SDNV conversions.
@@ -53,7 +55,7 @@ public class SdnvTest extends TestCase {
 		assertTrue(fromBytes.getValue() == testpairs[2].value);
 	}
 	
-	public class SdnvIndexTestPair {
+	public static class SdnvIndexTestPair {
 		public SdnvIndexTestPair(long value, byte [] bytes, int index) {
 			this.value = value;
 			this.bytes = bytes;
@@ -64,7 +66,7 @@ public class SdnvTest extends TestCase {
 		public int index;
 	}
 	
-	private final SdnvIndexTestPair [] indextestpairs = {
+	private static final SdnvIndexTestPair [] indextestpairs = {
 		new SdnvIndexTestPair(0xABC,  new byte [] {(byte) 0x13, (byte) 0x95, (byte) 0x3C}, 1),
 		new SdnvIndexTestPair(0x1234, new byte [] {(byte) 0x00, (byte) 0xFE, (byte) 0xA4, (byte) 0x34}, 2)
 	};
