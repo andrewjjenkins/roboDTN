@@ -10,7 +10,11 @@ import com.ajj.robodtn.Bundle;
 
 public class SerializedDictionary {
 	
-	public void serialize(Bundle b) throws MalformedEidException {
+	public SerializedDictionary(Bundle b) throws MalformedEidException {
+		serialize(b);
+	}
+	
+	private void serialize(Bundle b) throws MalformedEidException {
 		/* This will avoid storing duplicate EID scheme-names or scheme-specific-parts.
 		 * There is an NP-hard compression scheme that isn't attempted here. */
 		LinkedHashMap<String, ArrayList<EidPartReference>> dictSet = 
@@ -30,8 +34,11 @@ public class SerializedDictionary {
 			Entry<String, ArrayList<EidPartReference>> e = i.next();
 			bytes_length += e.getKey().length() + 1;
 		}
-		/* Don't need null terminator for the last string. */
+		/* FIXME: It isn't required that you null-terminate the last element of the
+		 * dictionary, since the dictionary has an encoded length.  But DTN2 does,
+		 * so we do, too, because maybe that helps compatibility.
 		bytes_length--;
+		 */
 		
 		/* Serialize the dictionary */
 		bytes = new byte[bytes_length];
@@ -54,17 +61,10 @@ public class SerializedDictionary {
 				throw new RuntimeException("Can't use US-ASCII encoding");
 			}
 			
-			/* Copy EID string as byte array into part_bytes; null terminate
-			 * if it isn't the last element of the dictionary. */
+			/* Copy EID string as byte array into part_bytes; null terminate */
 			System.arraycopy(part_bytes, 0, bytes, cursor, part_bytes.length);
-			if(cursor + part_bytes.length < bytes_length) {
-				bytes[cursor + part_bytes.length] = 0;
-				cursor += part_bytes.length + 1;
-				assert(i.hasNext() == true);
-			} else {
-				cursor += part_bytes.length;
-				assert(i.hasNext() == false);
-			}
+			bytes[cursor + part_bytes.length] = 0;
+			cursor += part_bytes.length + 1;
 		}
 	}
 	
