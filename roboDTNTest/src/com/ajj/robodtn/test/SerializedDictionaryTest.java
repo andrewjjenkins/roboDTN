@@ -11,8 +11,7 @@ import com.ajj.robodtn.serialize.SerializedDictionary;
 import junit.framework.TestCase;
 
 public class SerializedDictionaryTest extends TestCase {
-		
-	public void testSerializingDictionary() throws MalformedEidException, UnsupportedEncodingException {
+	public void testSerializingDtn2Dictionary() throws MalformedEidException, UnsupportedEncodingException {
 		Bundle b = new Bundle(0, "dtn://dest.dtn", "dtn://source.dtn", 
 				"dtn://source.dtn/rpt-to", "dtn:none",
 				dtnUtil.iso8601ToDate("2009-04-27T00:05:47Z"),
@@ -28,6 +27,26 @@ public class SerializedDictionaryTest extends TestCase {
 		assertEquals(28, sd.rptto_sspo.get());
 		assertEquals(0, sd.cust_so.get());
 		assertEquals(48, sd.cust_sspo.get());
+		
+		assertTrue(Arrays.equals(sd.bytes, dictBytes));
+	}
+	
+	public void testSerializingCbheDictionary() throws MalformedEidException, UnsupportedEncodingException {
+		Bundle b = new Bundle(0, "ipn:13.2", "ipn:71.23", 
+				"dtn:none", "ipn:2.0",
+				dtnUtil.iso8601ToDate("2009-04-27T00:05:47Z"),
+				1, 300, 0, 0);
+		byte [] dictBytes = new byte[0];
+		SerializedDictionary sd = new SerializedDictionary(b);
+		
+		assertEquals(13, sd.dst_so.get());
+		assertEquals(2, sd.dst_sspo.get());
+		assertEquals(71, sd.src_so.get());
+		assertEquals(23, sd.src_sspo.get());
+		assertEquals(0, sd.rptto_so.get());
+		assertEquals(0, sd.rptto_sspo.get());
+		assertEquals(2, sd.cust_so.get());
+		assertEquals(0, sd.cust_sspo.get());
 		
 		assertTrue(Arrays.equals(sd.bytes, dictBytes));
 	}

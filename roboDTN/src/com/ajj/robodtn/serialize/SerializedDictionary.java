@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.ajj.robodtn.Bundle;
@@ -17,27 +18,51 @@ public class SerializedDictionary {
 	
 	/* Escape any characters that are specials in regular expressions. */
 	private static final String cbheSchemename = "ipn";
-	private static final Pattern cbheablePattern = Pattern.compile(cbheSchemename + ":(\\d+)\\.(\\d+)");
+	private static final Pattern cbheablePattern = Pattern.compile(cbheSchemename + "\\:(\\d+)\\.(\\d+)");
+	
+	/* Returns true if the EID can be CBHE-encoded */
+	private static boolean canBeCbheEid(String eid) {
+		if (eid.equals("dtn:none")) return true;
+		if (cbheablePattern.matcher(eid).matches()) return true;
+		return false;
+	}
 	
 	/* Returns true if the dictionary can be CBHE-encoded */
 	private static boolean canBeCbhe(Bundle b) {
-		if (!cbheablePattern.matcher(b.dst).matches()) return false;
-		if (!cbheablePattern.matcher(b.src).matches()) return false;
-		if (!cbheablePattern.matcher(b.rptto).matches()) return false;
-		if (!cbheablePattern.matcher(b.cust).matches()) return false;
+		if (!canBeCbheEid(b.dst)) return false;
+		if (!canBeCbheEid(b.src)) return false;
+		if (!canBeCbheEid(b.rptto)) return false;
+		if (!canBeCbheEid(b.cust)) return false;
+		/* FIXME: if(other_eid_refs) return false; */
 		return true;
 	}
 	
+	/* Serializes an EID that is known to be CBHE-able. */
+	private static void serializeCbheEid(String eid, EidPartReference so, EidPartReference sspo) 
+			throws MalformedEidException
+	{
+		if (eid.equals("dtn:none")) {
+			so.set(0);
+			sspo.set(0);
+			return;
+		} else {
+			Matcher m = cbheablePattern.matcher(eid);
+			if (m.matches() == false) {
+				throw new MalformedEidException("EID " + eid + " isn't CBHE-compatible");
+			}
+			so.set(Long.parseLong(m.group(1)));
+			sspo.set(Long.parseLong(m.group(2)));
+			return;
+		}
+	}
+	
 	/* Serializes a dictionary that is known to be CBHE-able. */
-	private void serializeCbhe(Bundle b) {
-		dst_so.set(Long.parseLong(cbheablePattern.matcher(b.dst).group(0)));
-		dst_sspo.set(Long.parseLong(cbheablePattern.matcher(b.dst).group(1)));
-		src_so.set(Long.parseLong(cbheablePattern.matcher(b.src).group(0)));
-		src_sspo.set(Long.parseLong(cbheablePattern.matcher(b.src).group(1)));
-		rptto_so.set(Long.parseLong(cbheablePattern.matcher(b.rptto).group(0)));
-		rptto_sspo.set(Long.parseLong(cbheablePattern.matcher(b.rptto).group(1)));
-		cust_so.set(Long.parseLong(cbheablePattern.matcher(b.cust).group(0)));
-		cust_sspo.set(Long.parseLong(cbheablePattern.matcher(b.cust).group(1)));
+	private void serializeCbhe(Bundle b) throws MalformedEidException {
+		serializeCbheEid(b.dst, dst_so, dst_sspo);
+		serializeCbheEid(b.src, src_so, src_sspo);
+		serializeCbheEid(b.rptto, rptto_so, rptto_sspo);
+		serializeCbheEid(b.cust, cust_so, cust_sspo);		
+		bytes = new byte[0];
 	}
 	
 	private void serializeFullDictionary(Bundle b) throws MalformedEidException {
