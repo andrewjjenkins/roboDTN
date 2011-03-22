@@ -9,12 +9,10 @@ import com.ajj.robodtn.test.SdnvTest;
 
 public class SdnvDataInputStreamTest extends TestCase {
 	public void testSdnvs() throws IOException {
-		SdnvTest st = new SdnvTest();
-		
-		for(int i = 0; i < st.testpairs.length; i++) {
+		for(int i = 0; i < SdnvTest.testpairs.length; i++) {
 			SdnvDataInputStream is = new SdnvDataInputStream(
-							new ByteArrayInputStream(st.testpairs[i].bytes));
-			assertEquals(st.testpairs[i].value, is.readSdnv());
+							new ByteArrayInputStream(SdnvTest.testpairs[i].bytes));
+			assertEquals(SdnvTest.testpairs[i].value, is.readSdnv());
 		}
 	}
 }
