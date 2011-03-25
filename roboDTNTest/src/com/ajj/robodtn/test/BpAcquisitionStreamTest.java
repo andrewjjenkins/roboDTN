@@ -12,7 +12,7 @@ import android.content.res.*;
 import android.test.InstrumentationTestCase;
 
 public class BpAcquisitionStreamTest extends InstrumentationTestCase {
-	private class AcquisitionTestPair {
+	public static class AcquisitionTestPair {
 		public AcquisitionTestPair(String acqAsset, Bundle bundle) {
 			this.acqAsset = acqAsset;
 			this.bundle = bundle;
@@ -21,7 +21,7 @@ public class BpAcquisitionStreamTest extends InstrumentationTestCase {
 		public Bundle bundle;
 	}
 	
-	private final AcquisitionTestPair [] testpairs = {
+	public static final AcquisitionTestPair [] testpairs = {
 		new AcquisitionTestPair("testbundles/ionbundle", 
 			new Bundle(0x94, "ipn:1.1", "ipn:1.0", "dtn:none", "dtn:none", 
 					dtnUtil.iso8601ToDate("2009-04-27T00:05:47Z"), 1, 300, 0, 0)),

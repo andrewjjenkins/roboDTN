@@ -34,6 +34,8 @@ public class AcquireBundleDict {
 	}
 	
 	public int getLength() { return len; }
+	public byte [] getBytes() { return bytes; }
+
 	
 	private String cbheEidString(long so, long sspo) {
 		if(so == 0 && sspo == 0) { return "dtn:none"; }
