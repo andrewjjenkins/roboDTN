@@ -7,6 +7,7 @@ import java.util.Iterator;
 
 import com.ajj.robodtn.Bundle;
 import com.ajj.robodtn.Sdnv;
+import com.ajj.robodtn.dtnUtil;
 
 public class TransmitBundle extends SdnvDataOutputStream {
 	
@@ -33,7 +34,7 @@ public class TransmitBundle extends SdnvDataOutputStream {
 		fields.add(new Sdnv(sd.rptto_sspo.get()).getBytes());
 		fields.add(new Sdnv(sd.cust_so.get()).getBytes());
 		fields.add(new Sdnv(sd.cust_sspo.get()).getBytes());
-		fields.add(new Sdnv(((long)(b.createTimestamp.getTime()))/1000 - Bundle.DTNEPOCH).getBytes());
+		fields.add(new Sdnv(dtnUtil.DateToDtnShortDate(b.createTimestamp)).getBytes());
 		fields.add(new Sdnv(b.createSeq).getBytes());
 		fields.add(new Sdnv(b.lifetime).getBytes());
 		fields.add(new Sdnv(sd.bytes.length).getBytes());

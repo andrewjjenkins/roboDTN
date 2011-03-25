@@ -11,6 +11,14 @@ public final class dtnUtil {
 		return new Date(t.toMillis(true));
 	}
 	
+	public static long DateToDtnShortDate(Date normalDate) {
+		return normalDate.getTime()/1000 - Bundle.DTNEPOCH;
+	}
+	
+	public static Date DtnShortDateToDate(long dtnShortDate) {
+		return new Date((dtnShortDate + Bundle.DTNEPOCH) * 1000);
+	}
+	
 	public static byte[] hexStringToByteArray(String sWithWhitespace) {
 		String s = sWithWhitespace.replaceAll("\\s", "");
 	    int len = s.length();
