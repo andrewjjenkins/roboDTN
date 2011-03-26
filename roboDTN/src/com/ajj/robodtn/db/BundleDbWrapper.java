@@ -16,7 +16,6 @@
 package com.ajj.robodtn.db;
 
 import java.util.Date;
-import java.util.HashMap;
 
 import com.ajj.robodtn.Bundle;
 import com.ajj.robodtn.dtnUtil;
@@ -63,8 +62,6 @@ public class BundleDbWrapper {
 	public static final String BUNDLE_TABLE_DROP =
 		"DROP TABLE IF EXISTS " + BUNDLE_TABLE_NAME;
 	
-	private static HashMap<String, String> sBundleProjectionMap;
-	
 	private static final String [] RETRIEVEBUNDLE_PROJECTION = new String [] {
 		ID_COL,
 		PROCFLAGS_COL,
@@ -93,24 +90,7 @@ public class BundleDbWrapper {
 	private static final int FRAGOFFSET_COL_INDEX = 10;
 	private static final int ADULENGTH_COL_INDEX = 11;
 	private static final int PAYLOADFILENAME_COL_INDEX = 12;
-	
-	static {
-		sBundleProjectionMap = new HashMap<String, String>();
-		sBundleProjectionMap.put(ID_COL, ID_COL);
-		sBundleProjectionMap.put(PROCFLAGS_COL, PROCFLAGS_COL);
-		sBundleProjectionMap.put(DST_COL, DST_COL);
-		sBundleProjectionMap.put(SRC_COL, SRC_COL);
-		sBundleProjectionMap.put(RPTTO_COL, RPTTO_COL);
-		sBundleProjectionMap.put(CUST_COL, CUST_COL);
-		sBundleProjectionMap.put(CREATETIMESTAMP_COL, CREATETIMESTAMP_COL);
-		sBundleProjectionMap.put(CREATESEQ_COL, CREATESEQ_COL);
-		sBundleProjectionMap.put(LIFETIME_COL, LIFETIME_COL);
-		sBundleProjectionMap.put(DICTIONARYBLOB_COL, DICTIONARYBLOB_COL);
-		sBundleProjectionMap.put(FRAGOFFSET_COL, FRAGOFFSET_COL);
-		sBundleProjectionMap.put(ADULENGTH_COL, ADULENGTH_COL);
-		sBundleProjectionMap.put(PAYLOADFILENAME_COL, PAYLOADFILENAME_COL);
-	}
-	
+		
 	private DbOpener mDbOpener;
 	
 	public BundleDbWrapper(Context context) {
@@ -121,7 +101,13 @@ public class BundleDbWrapper {
 		mDbOpener = new DbOpener(context, wipe);
 	}
 	
-	public long insertBundle(Bundle b) {
+	public long insertBundle(Bundle b) throws BundleAlreadyInDbException {
+		if(isBundleInserted(b.src, b.createTimestamp, b.createSeq) == true) {
+			throw new BundleAlreadyInDbException("Can't insert (" + b.src + 
+					", " + b.createTimestamp + ", " + b.createSeq + "), it's already in DB");
+		}
+		
+		
 		ContentValues vals = new ContentValues();
 		
 		vals.put(PROCFLAGS_COL, b.procFlags);
@@ -165,15 +151,7 @@ public class BundleDbWrapper {
 	public Bundle retrieveBundle(String srcEid, long dtnShortDate, long createSeq) 
 			throws NotFoundInDbException 
 	{
-		SQLiteQueryBuilder q = new SQLiteQueryBuilder();
-		
-		q.setTables(BUNDLE_TABLE_NAME);
-		q.setProjectionMap(sBundleProjectionMap);
-		
-		q.appendWhere(SRC_COL + "=");
-		q.appendWhereEscapeString(srcEid);
-		q.appendWhere(" AND " + CREATETIMESTAMP_COL + "=" + dtnShortDate +
-				      " AND " + CREATESEQ_COL + "=" + createSeq);
+		SQLiteQueryBuilder q = queryForBundle(srcEid, dtnShortDate, createSeq);
 		
 		SQLiteDatabase db = mDbOpener.getReadableDatabase();
 		
@@ -208,5 +186,41 @@ public class BundleDbWrapper {
 		}
 		
 		return b;
+	}
+	
+	private static final String [] checkForBundleProjection = new String [] { ID_COL }; 
+	
+	public boolean isBundleInserted(String srcEid, Date createTimestamp, long createSeq)
+	{
+		return isBundleInserted(srcEid, dtnUtil.DateToDtnShortDate(createTimestamp), createSeq);
+	}
+	
+	public boolean isBundleInserted(String srcEid, long dtnShortDate, long createSeq)
+	{		                     
+		SQLiteDatabase db = mDbOpener.getReadableDatabase();
+		SQLiteQueryBuilder q = queryForBundle(srcEid, dtnShortDate, createSeq);
+		
+		Cursor c = q.query(db,
+						   checkForBundleProjection,
+						   null, null, null, null, null, "1");
+		
+		if (c == null || !c.moveToFirst()) {
+			return false;
+		}
+		return true;  
+	}
+	
+	private SQLiteQueryBuilder queryForBundle(String srcEid, long dtnShortDate, long createSeq)
+	{
+		SQLiteQueryBuilder q = new SQLiteQueryBuilder();
+		
+		q.setTables(BUNDLE_TABLE_NAME);
+		
+		q.appendWhere(SRC_COL + "=");
+		q.appendWhereEscapeString(srcEid);
+		q.appendWhere(" AND " + CREATETIMESTAMP_COL + "=" + dtnShortDate +
+				      " AND " + CREATESEQ_COL + "=" + createSeq);
+		
+		return q;
 	}
 }

@@ -18,20 +18,34 @@ package com.ajj.robodtn.test;
 import android.test.AndroidTestCase;
 
 import com.ajj.robodtn.Bundle;
+import com.ajj.robodtn.db.BundleAlreadyInDbException;
 import com.ajj.robodtn.db.BundleDbWrapper;
 import com.ajj.robodtn.db.NotFoundInDbException;
 
 public class BundleDbWrapperTest extends AndroidTestCase {
 
-	public void testBundleDbWrapper () {
+	public void testBundleDbWrapper () throws BundleAlreadyInDbException {
 		BundleDbWrapper db = new BundleDbWrapper(getContext(), true);
 		
+		/* Verify that these bundles are not already in the database. */
+		for(int i = 0; i < BpAcquisitionStreamTest.testpairs.length; i++) {
+			Bundle b = BpAcquisitionStreamTest.testpairs[i].bundle;
+			assertFalse(db.isBundleInserted(b.src, b.createTimestamp, b.createSeq));
+		}
 		
+		/* Insert bundles. */
 		for(int i = 0; i < BpAcquisitionStreamTest.testpairs.length; i++) {
 			Bundle insertedBundle = BpAcquisitionStreamTest.testpairs[i].bundle;
 			db.insertBundle(insertedBundle);
 		}
 		
+		/* Check that these bundles are inserted. */
+		for(int i = 0; i < BpAcquisitionStreamTest.testpairs.length; i++) {
+			Bundle b = BpAcquisitionStreamTest.testpairs[i].bundle;
+			assertTrue(db.isBundleInserted(b.src, b.createTimestamp, b.createSeq));
+		}		
+		
+		/* Verify that we extract matching bundles. */
 		for(int i = 0; i < BpAcquisitionStreamTest.testpairs.length; i++) {
 			Bundle expected = BpAcquisitionStreamTest.testpairs[i].bundle;
 			Bundle retrieved = null; 
@@ -61,5 +75,20 @@ public class BundleDbWrapperTest extends AndroidTestCase {
 			assertEquals(expected.aduLength, retrieved.aduLength);
 		}
 		
+		/* Verify that we can't insert these bundles again. */
+		for(int i = 0; i < BpAcquisitionStreamTest.testpairs.length; i++) {
+			Bundle dupInsert = BpAcquisitionStreamTest.testpairs[i].bundle;
+			
+			/* Retrieve the bundle from the database. */
+			try {
+				db.insertBundle(dupInsert);
+			} catch (BundleAlreadyInDbException e) {
+				continue;
+			}
+			fail("Could insert more than one copy of bundle #" + i 
+					+ " (" + dupInsert.src
+					+ ", " + dupInsert.createTimestamp 
+					+ ", " + dupInsert.createSeq + ")");
+		}
 	}
 }
