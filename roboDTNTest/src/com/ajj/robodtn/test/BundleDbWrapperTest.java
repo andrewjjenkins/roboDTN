@@ -20,12 +20,14 @@ import android.test.AndroidTestCase;
 import com.ajj.robodtn.Bundle;
 import com.ajj.robodtn.db.BundleAlreadyInDbException;
 import com.ajj.robodtn.db.BundleDbWrapper;
+import com.ajj.robodtn.db.DbOpener;
 import com.ajj.robodtn.db.NotFoundInDbException;
 
 public class BundleDbWrapperTest extends AndroidTestCase {
 
 	public void testBundleDbWrapper () throws BundleAlreadyInDbException {
-		BundleDbWrapper db = new BundleDbWrapper(getContext(), true);
+		DbOpener dbOpener = new DbOpener(getContext(), true);
+		BundleDbWrapper db = dbOpener.bundleDbWrapper;
 		
 		/* Verify that these bundles are not already in the database. */
 		for(int i = 0; i < BpAcquisitionStreamTest.testpairs.length; i++) {

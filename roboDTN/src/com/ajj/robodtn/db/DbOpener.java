@@ -28,7 +28,7 @@ public class DbOpener extends SQLiteOpenHelper {
 	private static final String TAG = "roboDTN DbOpener";
 	
 	public DbOpener(Context context) {
-		super(context, BUNDLE_DATABASE_NAME, null, BUNDLE_DATABASE_VERSION);
+		this(context, false);
 	}
 	
 	public DbOpener(Context context, boolean wipe) {
@@ -36,21 +36,33 @@ public class DbOpener extends SQLiteOpenHelper {
 		
 		if(wipe == true) {
 			SQLiteDatabase db = getWritableDatabase();
-			db.execSQL(BundleDbWrapper.BUNDLE_TABLE_DROP);
+			dropAll(db);
 			onCreate(db);
 		}
+		
+		bundleDbWrapper = new BundleDbWrapper(this);
+		blockDbWrapper = new BlockDbWrapper(this);
+	}
+	
+	public void dropAll(SQLiteDatabase db) {
+		db.execSQL(BundleDbWrapper.BUNDLE_TABLE_DROP);
+		db.execSQL(BlockDbWrapper.BLOCK_TABLE_DROP);
 	}
 
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL(BundleDbWrapper.BUNDLE_TABLE_CREATE);
+		db.execSQL(BlockDbWrapper.BLOCK_TABLE_CREATE);
 	}
 
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		Log.w(TAG, "roboDTN doesn't update db gracefully (" + oldVersion + 
 				" to " + newVersion + "), recreating db.");
 		
-		db.execSQL("DROP TABLE IF EXISTS " + BundleDbWrapper.BUNDLE_TABLE_NAME + ";");
+		dropAll(db);
 		onCreate(db);
 	}
+	
+	public BundleDbWrapper bundleDbWrapper;
+	public BlockDbWrapper blockDbWrapper;
 
 }

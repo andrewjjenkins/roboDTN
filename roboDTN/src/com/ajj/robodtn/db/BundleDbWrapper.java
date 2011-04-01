@@ -93,14 +93,10 @@ public class BundleDbWrapper {
 		
 	private DbOpener mDbOpener;
 	
-	public BundleDbWrapper(Context context) {
-		mDbOpener = new DbOpener(context);
+	protected BundleDbWrapper(DbOpener dbOpener) {
+		mDbOpener = dbOpener;
 	}
-	
-	public BundleDbWrapper(Context context, boolean wipe) {
-		mDbOpener = new DbOpener(context, wipe);
-	}
-	
+		
 	public long insertBundle(Bundle b) throws BundleAlreadyInDbException {
 		if(isBundleInserted(b.src, b.createTimestamp, b.createSeq) == true) {
 			throw new BundleAlreadyInDbException("Can't insert (" + b.src + 
