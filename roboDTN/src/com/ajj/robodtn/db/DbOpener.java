@@ -41,17 +41,17 @@ public class DbOpener extends SQLiteOpenHelper {
 		}
 		
 		bundleDbWrapper = new BundleDbWrapper(this);
-		blockDbWrapper = new BlockDbWrapper(this);
+		bundleBlockDbWrapper = new BundleBlockDbWrapper(this);
 	}
 	
 	public void dropAll(SQLiteDatabase db) {
 		db.execSQL(BundleDbWrapper.BUNDLE_TABLE_DROP);
-		db.execSQL(BlockDbWrapper.BLOCK_TABLE_DROP);
+		db.execSQL(BundleBlockDbWrapper.BLOCK_TABLE_DROP);
 	}
 
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL(BundleDbWrapper.BUNDLE_TABLE_CREATE);
-		db.execSQL(BlockDbWrapper.BLOCK_TABLE_CREATE);
+		db.execSQL(BundleBlockDbWrapper.BLOCK_TABLE_CREATE);
 	}
 
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -63,6 +63,6 @@ public class DbOpener extends SQLiteOpenHelper {
 	}
 	
 	public BundleDbWrapper bundleDbWrapper;
-	public BlockDbWrapper blockDbWrapper;
+	public BundleBlockDbWrapper bundleBlockDbWrapper;
 
 }

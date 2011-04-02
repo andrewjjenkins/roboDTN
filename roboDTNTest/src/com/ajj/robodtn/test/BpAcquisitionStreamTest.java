@@ -44,7 +44,11 @@ public class BpAcquisitionStreamTest extends InstrumentationTestCase {
 			new Bundle(0x90, "dtn://destination/app", "dtn://syme.dtn/source", 
 					"dtn://syme.dtn/source", "dtn:none", 
 					dtnUtil.iso8601ToDate("2011-01-30T02:24:16Z"),
-					2, 60, 0, 0))
+					2, 60, 0, 0)),
+		new AcquisitionTestPair("testbundles/ionbundle-with-ecos",
+			new Bundle(0x110, "ipn:1.1", "ipn:1.2", "dtn:none", "dtn:none",
+					dtnUtil.iso8601ToDate("2011-04-01T21:36:18Z"),
+					1, 3600, 0, 0))
 	};
 	
 	public void testAcquisitions() throws IOException, MalformedBundleException {

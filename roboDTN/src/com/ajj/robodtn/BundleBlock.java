@@ -29,6 +29,9 @@ public class BundleBlock {
 	public static final long FORWARDEDUNPROC	= 1 << 5;
 	public static final long HASEIDREFS			= 1 << 6;
 	
+	/* Position magic numbers. */
+	public static final int	POSITION_UNDEFINED  = 0;
+	
 	public int	type;
 	public int  position;
 	public long flags;
@@ -37,10 +40,12 @@ public class BundleBlock {
 	
 	public BundleBlock() {
 		type = -1;
+		position = POSITION_UNDEFINED;
 	}
 	
 	public BundleBlock(int type, long flags, long len, byte [] payload) {
 		this.type = type;
+		this.position = POSITION_UNDEFINED;
 		this.flags = flags;
 		this.len = len;
 		this.payload = payload;
@@ -48,6 +53,7 @@ public class BundleBlock {
 	
 	public BundleBlock(int type) {
 		this.type = type;
+		this.position = POSITION_UNDEFINED;
 		this.flags = 0;
 		this.len = 0;
 		this.payload = new byte[0];

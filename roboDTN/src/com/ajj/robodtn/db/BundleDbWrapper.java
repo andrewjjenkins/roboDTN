@@ -21,7 +21,6 @@ import com.ajj.robodtn.Bundle;
 import com.ajj.robodtn.dtnUtil;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
@@ -42,7 +41,6 @@ public class BundleDbWrapper {
 	public static final String FRAGOFFSET_COL = "fragOffset";
 	public static final String ADULENGTH_COL = "aduLength";
 	public static final String PAYLOADFILENAME_COL = "payloadFilename";
-	public static final String HACKNOTE_COL = "hacknote";
 	
 	public static final String BUNDLE_TABLE_CREATE =
 		"CREATE TABLE " + BUNDLE_TABLE_NAME + " (" +
@@ -129,7 +127,7 @@ public class BundleDbWrapper {
 		SQLiteDatabase db = mDbOpener.getWritableDatabase();
 		
 		/* Insert the bundle into the database. */
-		long rowId = db.insert(BUNDLE_TABLE_NAME, HACKNOTE_COL, vals);
+		long rowId = db.insert(BUNDLE_TABLE_NAME, null, vals);
 		
 		if (rowId > 0) {
 			return rowId;
