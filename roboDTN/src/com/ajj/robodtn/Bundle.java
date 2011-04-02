@@ -16,8 +16,6 @@
 package com.ajj.robodtn;
 
 import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
 
 import com.ajj.robodtn.acquire.AcquireBundleDict;
 
