@@ -15,6 +15,8 @@
  ******************************************************************************/
 package com.ajj.robodtn;
 
+import java.util.Arrays;
+
 public class BundleBlock {
 	/* Block types */
 	public static final int TYPE_UNDEFINED  = -1;
@@ -76,5 +78,20 @@ public class BundleBlock {
 	
 	public BundleBlock() {
 		this(TYPE_UNDEFINED);
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (!(o instanceof BundleBlock)) return false;
+		return equals((BundleBlock) o);
+	}
+	
+	public boolean equals(BundleBlock b) {
+		if (this.type != b.type) return false;
+		if (this.position != b.position) return false;
+		if (this.flags != b.flags) return false;
+		if (this.len != b.len) return false;
+		if (!Arrays.equals(this.payload, b.payload)) return false;
+		return true;
 	}
 }

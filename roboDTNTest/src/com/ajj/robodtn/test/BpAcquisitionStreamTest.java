@@ -18,6 +18,7 @@ package com.ajj.robodtn.test;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.io.InputStream;
+import java.util.List;
 
 import com.ajj.robodtn.BundleBlock;
 import com.ajj.robodtn.dtnUtil;
@@ -68,11 +69,11 @@ public class BpAcquisitionStreamTest extends InstrumentationTestCase {
 					new BundleBlock(BundleBlock.TYPE_ECOS,
 									BundleBlock.POSITION_FIRST,
 									BundleBlock.MUSTCOPY,
-									new byte [] { 0x64, 0x00 }),
+									new byte [] { 0x00, 0x64 }),
 					new BundleBlock(BundleBlock.TYPE_PAYLOAD,
 									BundleBlock.POSITION_PAYLOAD,
 									BundleBlock.MUSTCOPY | BundleBlock.LAST,
-									"hey here's a bundle\0".getBytes("US-ASCII"))}))
+									"Hey hey here's a bundle\0".getBytes("US-ASCII"))}))
 	};
 	} catch (UnsupportedEncodingException e) {
 		throw new RuntimeException(e);
@@ -98,6 +99,10 @@ public class BpAcquisitionStreamTest extends InstrumentationTestCase {
 			assertEquals(b.createTimestamp, tp.bundle.createTimestamp);
 			assertEquals(b.createSeq, tp.bundle.createSeq);
 			assertEquals(b.lifetime, tp.bundle.lifetime);
+			
+			List<BundleBlock> bbs = b.blocks.getBlocksInOrder();
+			List<BundleBlock> tpbs = tp.bundle.blocks.getBlocksInOrder();
+			assertTrue(tpbs.equals(bbs));
 
 			if ((b.procFlags & Bundle.FRAG) != 0) {
 				assertEquals(b.fragOffset, tp.bundle.fragOffset);
