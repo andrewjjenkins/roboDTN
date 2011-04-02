@@ -51,3 +51,4 @@ public class BundleBlock {
 		this.payload = new byte[0];
 	}
 }
+	public static final int TYPE_ECOS		= 0x13;
