@@ -16,6 +16,11 @@
 package com.ajj.robodtn;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.TreeMap;
 
 public class BundleBlocks extends TreeMap<Integer, ArrayList<BundleBlock>> {
@@ -40,5 +45,25 @@ public class BundleBlocks extends TreeMap<Integer, ArrayList<BundleBlock>> {
 			return false;
 		}
 		return true;
+	}
+	
+	private static class BlockPositionComparator implements Comparator<BundleBlock> {
+		public int compare(BundleBlock lhs, BundleBlock rhs) {
+			return (lhs.position > rhs.position) ? 1 : 
+				   (lhs.position < rhs.position) ? -1 : 0;
+		}
+	}
+	
+	public List<BundleBlock> getBlocksInOrder() {
+		LinkedList<BundleBlock> l = new LinkedList<BundleBlock>();
+		
+		for(Iterator<ArrayList <BundleBlock>> i = values().iterator(); i.hasNext(); ) {
+			ArrayList<BundleBlock> al = i.next();
+			l.addAll(al);
+		}
+		
+		Collections.sort(l, new BlockPositionComparator());
+		
+		return l;
 	}
 }

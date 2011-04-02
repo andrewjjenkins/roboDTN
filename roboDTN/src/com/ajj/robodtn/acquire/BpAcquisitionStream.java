@@ -78,13 +78,22 @@ public class BpAcquisitionStream extends SdnvDataInputStream {
 		}
 		
 		/* Acquire bundle blocks. */
+		int position = BundleBlock.POSITION_FIRST;
 		BpBlockAcquisitionStream bb_acq = new BpBlockAcquisitionStream(in);
 		while (!lastBlockRead) {
-			BundleBlock bb = bb_acq.readBundleBlock();
-			
+			BundleBlock bb = bb_acq.readBundleBlock(position);
+						
 			/* There can be at most one payload block per bundle. */
 			if(bb.type == BundleBlock.TYPE_PAYLOAD && b.blocks.hasBlock(BundleBlock.TYPE_PAYLOAD)) {
 				throw new MalformedBundleException(Malformity.TOOMANYPAYLOADS, "Too many payload blocks.");
+			}
+			
+			/* If this is the payload block, update its position and assign
+			 * all of the next positions accordingly.
+			 */
+			if(bb.type == BundleBlock.TYPE_PAYLOAD) {
+				bb.position = BundleBlock.POSITION_PAYLOAD;
+				position = BundleBlock.POSITION_FIRST_AFTER_PAYLOAD;
 			}
 			
 			b.blocks.addBlock(bb);

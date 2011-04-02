@@ -24,7 +24,7 @@ public class BpBlockAcquisitionStreamTest extends InstrumentationTestCase {
 	public static final AcquisitionTestPair [] testpairs = {
 		new AcquisitionTestPair("testblocks/ecos",
 			new BundleBlock(BundleBlock.TYPE_ECOS, BundleBlock.MUSTCOPY,
-					2, new byte [] { 0x00, 0x64 }))
+					new byte [] { 0x00, 0x64 }))
 	};
 	
 	public void testAcquisitions() throws IOException, MalformedBundleException {

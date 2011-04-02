@@ -27,8 +27,9 @@ public class BpBlockAcquisitionStream extends SdnvDataInputStream {
 		super(in);
 	}
 	
-	public BundleBlock readBundleBlock() throws IOException, MalformedBundleException {
+	public BundleBlock readBundleBlock(int position) throws IOException, MalformedBundleException {
 		BundleBlock b = new BundleBlock();
+		b.position = position;
 		
 		/* Read the block header */
 		try {
@@ -58,5 +59,9 @@ public class BpBlockAcquisitionStream extends SdnvDataInputStream {
 		}
 		
 		return b;
+	}
+	
+	public BundleBlock readBundleBlock() throws IOException, MalformedBundleException {
+		return readBundleBlock(BundleBlock.POSITION_UNDEFINED);
 	}
 }

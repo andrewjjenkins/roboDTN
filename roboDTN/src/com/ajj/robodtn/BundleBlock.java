@@ -17,6 +17,7 @@ package com.ajj.robodtn;
 
 public class BundleBlock {
 	/* Block types */
+	public static final int TYPE_UNDEFINED  = -1;
 	public static final int TYPE_PAYLOAD	= 0x01;
 	public static final int TYPE_ECOS		= 0x13;
 	
@@ -29,8 +30,19 @@ public class BundleBlock {
 	public static final long FORWARDEDUNPROC	= 1 << 5;
 	public static final long HASEIDREFS			= 1 << 6;
 	
+	/* The granularity of positions as bundle blocks are acquired.
+	 * FIXME: Indicating the position by integers makes storing in database more 
+	 * rapid but limits the number of blocks per bundle, a tradeoff that needs to
+	 * be evaluated.
+	 */
+	public static final int POSITION_GRANULARITY = 100;
+	
 	/* Position magic numbers. */
+	public static final int POSITION_FIRST      = -10000;
 	public static final int	POSITION_UNDEFINED  = 0;
+	public static final int POSITION_PAYLOAD	= 0;
+	public static final int POSITION_FIRST_AFTER_PAYLOAD = 
+								POSITION_PAYLOAD + POSITION_GRANULARITY;
 	
 	public int	type;
 	public int  position;
@@ -38,24 +50,27 @@ public class BundleBlock {
 	public long len;
 	public byte [] payload;
 	
-	public BundleBlock() {
-		type = -1;
-		position = POSITION_UNDEFINED;
-	}
-	
-	public BundleBlock(int type, long flags, long len, byte [] payload) {
+	public BundleBlock(int type, int position, long flags, long len, byte [] payload) {
 		this.type = type;
-		this.position = POSITION_UNDEFINED;
+		this.position = position;
 		this.flags = flags;
 		this.len = len;
 		this.payload = payload;
 	}
 	
+	public BundleBlock(int type, int position, long flags, byte [] payload) {
+		this(type, position, flags, payload.length, payload);
+	}
+	
+	public BundleBlock(int type, long flags, byte [] payload) {
+		this(type, POSITION_UNDEFINED, flags, payload.length, payload);
+	}
+	
 	public BundleBlock(int type) {
-		this.type = type;
-		this.position = POSITION_UNDEFINED;
-		this.flags = 0;
-		this.len = 0;
-		this.payload = new byte[0];
+		this(type, POSITION_UNDEFINED, 0, 0, null);
+	}
+	
+	public BundleBlock() {
+		this(TYPE_UNDEFINED);
 	}
 }
