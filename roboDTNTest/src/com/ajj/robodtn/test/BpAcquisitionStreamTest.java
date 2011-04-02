@@ -16,7 +16,10 @@
 package com.ajj.robodtn.test;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.io.InputStream;
+
+import com.ajj.robodtn.BundleBlock;
 import com.ajj.robodtn.dtnUtil;
 import com.ajj.robodtn.Bundle;
 import com.ajj.robodtn.Malformity;
@@ -36,20 +39,45 @@ public class BpAcquisitionStreamTest extends InstrumentationTestCase {
 		public Bundle bundle;
 	}
 	
-	public static final AcquisitionTestPair [] testpairs = {
+	public static final AcquisitionTestPair [] testpairs;
+	
+	static {
+	try {
+	testpairs = new AcquisitionTestPair [] {
 		new AcquisitionTestPair("testbundles/ionbundle", 
 			new Bundle(0x94, "ipn:1.1", "ipn:1.0", "dtn:none", "dtn:none", 
-					dtnUtil.iso8601ToDate("2009-04-27T00:05:47Z"), 1, 300, 0, 0)),
+					dtnUtil.iso8601ToDate("2009-04-27T00:05:47Z"), 1, 300, 0, 0,
+					new BundleBlock [] {
+					new BundleBlock(BundleBlock.TYPE_PAYLOAD,
+									BundleBlock.POSITION_PAYLOAD,
+									BundleBlock.MUSTCOPY | BundleBlock.LAST,
+									"here is a test bundle".getBytes("US-ASCII"))})),
 		new AcquisitionTestPair("testbundles/dtn2bundle",
 			new Bundle(0x90, "dtn://destination/app", "dtn://syme.dtn/source", 
 					"dtn://syme.dtn/source", "dtn:none", 
 					dtnUtil.iso8601ToDate("2011-01-30T02:24:16Z"),
-					2, 60, 0, 0)),
+					2, 60, 0, 0, new BundleBlock [] {
+					new BundleBlock(BundleBlock.TYPE_PAYLOAD,
+									BundleBlock.POSITION_PAYLOAD,
+									BundleBlock.LAST,
+									"here is a bundle from DTN2".getBytes("US-ASCII"))})),
 		new AcquisitionTestPair("testbundles/ionbundle-with-ecos",
 			new Bundle(0x110, "ipn:1.1", "ipn:1.2", "dtn:none", "dtn:none",
 					dtnUtil.iso8601ToDate("2011-04-01T21:36:18Z"),
-					1, 3600, 0, 0))
+					1, 3600, 0, 0, new BundleBlock [] {
+					new BundleBlock(BundleBlock.TYPE_ECOS,
+									BundleBlock.POSITION_FIRST,
+									BundleBlock.MUSTCOPY,
+									new byte [] { 0x64, 0x00 }),
+					new BundleBlock(BundleBlock.TYPE_PAYLOAD,
+									BundleBlock.POSITION_PAYLOAD,
+									BundleBlock.MUSTCOPY | BundleBlock.LAST,
+									"hey here's a bundle\0".getBytes("US-ASCII"))}))
 	};
+	} catch (UnsupportedEncodingException e) {
+		throw new RuntimeException(e);
+	}
+	}
 	
 	public void testAcquisitions() throws IOException, MalformedBundleException {
 		AcquisitionTestPair tp;

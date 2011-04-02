@@ -16,6 +16,8 @@
 package com.ajj.robodtn;
 
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 import com.ajj.robodtn.acquire.AcquireBundleDict;
 
@@ -69,7 +71,7 @@ public class Bundle {
 
 	public Bundle(long procFlags, String dst, String src,
 			String rptto, String cust, Date createTimestamp, long createSeq,
-			long lifetime, long fragOffset, long aduLength) {
+			long lifetime, long fragOffset, long aduLength, BundleBlock [] blocks) {
 		this.version = VERSION_RFC5050;
 		this.procFlags = procFlags;
 		this.dst = dst;
@@ -82,7 +84,14 @@ public class Bundle {
 		this.fragOffset = fragOffset;
 		this.aduLength = aduLength;
 		
-		this.blocks = null;
+		if(blocks == null) {
+			this.blocks = null;
+		} else {
+			this.blocks = new BundleBlocks();
+			for(int i = 0; i < blocks.length; i++) {
+				this.blocks.addBlock(blocks[i]);
+			}	
+		}
 		this.dict = null;
 	}
 

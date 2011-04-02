@@ -50,6 +50,10 @@ public class BundleBlock {
 	public long len;
 	public byte [] payload;
 	
+	/* FIXME: Should probably only have payload, and len should just be
+	 * payload.length.  Otherwise, need a good way for checking consistency
+	 * of len and payload.length. */
+	
 	public BundleBlock(int type, int position, long flags, long len, byte [] payload) {
 		this.type = type;
 		this.position = position;

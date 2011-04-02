@@ -16,17 +16,19 @@
 package com.ajj.robodtn.test;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import android.content.res.AssetManager;
 import android.test.InstrumentationTestCase;
 
 import com.ajj.robodtn.Bundle;
+import com.ajj.robodtn.BundleBlock;
 import com.ajj.robodtn.dtnUtil;
 import com.ajj.robodtn.serialize.MalformedEidException;
 import com.ajj.robodtn.serialize.TransmitBundle;
 
 public class TransmitBundleTest extends InstrumentationTestCase {
-	private class TransmitTestPair {
+	private static class TransmitTestPair {
 		public TransmitTestPair(String acqAsset, Bundle bundle) {
 			this.acqAsset = acqAsset;
 			this.bundle = bundle;
@@ -35,17 +37,32 @@ public class TransmitBundleTest extends InstrumentationTestCase {
 		public Bundle bundle;
 	}
 	
-	private final TransmitTestPair [] testpairs = {
-		new TransmitTestPair("testbundles/dtn2bundle",
+	private static final TransmitTestPair [] testpairs;
+	
+	static {
+	try {
+		testpairs = new TransmitTestPair [] { new TransmitTestPair("testbundles/dtn2bundle",
 			new Bundle(0x90, "dtn://destination/app", "dtn://syme.dtn/source", 
 					"dtn://syme.dtn/source", "dtn:none", 
 					dtnUtil.iso8601ToDate("2011-01-30T02:24:16Z"),
-					2, 60, 0, 0)),
+					2, 60, 0, 0, new BundleBlock [] {
+					new BundleBlock(BundleBlock.TYPE_PAYLOAD,
+									BundleBlock.POSITION_PAYLOAD,
+									BundleBlock.LAST,
+									"here is a bundle from DTN2".getBytes("US-ASCII"))})),
 		new TransmitTestPair("testbundles/ionbundle", 
 			new Bundle(0x94, "ipn:1.1", "ipn:1.0", "dtn:none", "dtn:none", 
-					dtnUtil.iso8601ToDate("2009-04-27T00:05:47Z"), 1, 300, 0, 0))
-
-	};
+					dtnUtil.iso8601ToDate("2009-04-27T00:05:47Z"), 1, 300, 0, 0, 
+					new BundleBlock [] {
+					new BundleBlock(BundleBlock.TYPE_PAYLOAD,
+									BundleBlock.POSITION_PAYLOAD,
+									BundleBlock.MUSTCOPY | BundleBlock.LAST,
+									"here is a test bundle".getBytes("US-ASCII"))}))
+		};
+	} catch (UnsupportedEncodingException e) {
+		throw new RuntimeException(e);
+	}
+	}
 	
 	public void testTransmits() {
 		TransmitTestPair tp;

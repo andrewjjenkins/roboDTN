@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import com.ajj.robodtn.Bundle;
+import com.ajj.robodtn.BundleBlock;
 import com.ajj.robodtn.Sdnv;
 import com.ajj.robodtn.dtnUtil;
 
@@ -75,7 +76,20 @@ public class TransmitBundle extends SdnvDataOutputStream {
 			write(bytes, 0, bytes.length);
 		}
 		
-		/* FIXME: Write the rest of the blocks. */
+		/* Write the rest of the blocks in the bundle. */
+		for(Iterator<BundleBlock> i = b.blocks.getBlocksInOrder().iterator(); i.hasNext(); ) {
+			BundleBlock block = i.next();
+			writeByte(block.type);
+			
+			long flags = block.flags;
+			if(!i.hasNext()) {
+				flags |= BundleBlock.LAST;
+			}
+			writeSdnv(flags);
+			
+			writeSdnv(block.len);
+			write(block.payload, 0, block.payload.length);
+		}
 	}
 
 }
