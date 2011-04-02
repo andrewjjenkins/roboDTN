@@ -74,6 +74,7 @@ public class TransmitBundleTest extends InstrumentationTestCase {
 				ComparisonStream cmpstream = new ComparisonStream(am.open(tp.acqAsset));
 				TransmitBundle tb = new TransmitBundle(cmpstream);			
 				tb.transmit(tp.bundle);
+				cmpstream.finish();
 			} catch (IOException exc) {
 				fail("Streams not equal for bundle " + i + exc.toString());
 			} catch (MalformedEidException e) {

@@ -37,4 +37,11 @@ public class ComparisonStream extends OutputStream {
 		}
 		bytesWritten++;
 	}
+	
+	public void finish() throws IOException {
+		int b = in.read();
+		if (b != -1) {
+			throw new IOException("InputStream is longer than OutputStream; read byte " + b);
+		}
+	}
 }
