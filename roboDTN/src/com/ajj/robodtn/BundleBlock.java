@@ -18,6 +18,7 @@ package com.ajj.robodtn;
 public class BundleBlock {
 	/* Block types */
 	public static final int TYPE_PAYLOAD	= 0x01;
+	public static final int TYPE_ECOS		= 0x13;
 	
 	/* Block processing flags */
 	public static final long MUSTCOPY			= 1 << 0;
@@ -29,6 +30,7 @@ public class BundleBlock {
 	public static final long HASEIDREFS			= 1 << 6;
 	
 	public int	type;
+	public int  position;
 	public long flags;
 	public long len;
 	public byte [] payload;
@@ -51,4 +53,3 @@ public class BundleBlock {
 		this.payload = new byte[0];
 	}
 }
-	public static final int TYPE_ECOS		= 0x13;
