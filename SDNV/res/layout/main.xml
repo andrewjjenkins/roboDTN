@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    
+
+<TableLayout 
+	android:layout_width="wrap_content" 
+	android:layout_height="wrap_content" 
+	android:stretchColumns="1">
+
+<!-- The SDNV section -->
+<TableRow android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_span="10">
+	<TextView  
+	    android:layout_width="wrap_content" 
+	    android:layout_height="wrap_content" 
+	    android:text="@string/sdnv"
+	    />
+</TableRow>
+<TableRow android:layout_width="wrap_content" android:layout_height="wrap_content">
+    <TextView 
+    	android:text="@string/hex" 
+    	android:layout_height="wrap_content" android:layout_width="wrap_content" 
+    	android:paddingRight="10dp"/>
+    <EditText 
+    	android:id="@+id/sdnv_hex" 
+    	android:layout_height="wrap_content" android:layout_width="wrap_content" 
+    	android:text="953C"/>
+</TableRow>
+<TableRow android:layout_width="wrap_content" android:layout_height="wrap_content">
+    <TextView 
+    	android:text="@string/dec" 
+    	android:layout_height="wrap_content" android:layout_width="wrap_content" 
+    	android:paddingRight="10dp"/>
+    <EditText 
+    	android:id="@+id/sdnv_dec" 
+    	android:layout_height="wrap_content" android:layout_width="wrap_content" 
+    	android:text="38204"/>
+</TableRow>
+
+<!-- The Integer section -->
+<TableRow android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_span="10">
+	<TextView  
+	    android:layout_width="wrap_content" 
+	    android:layout_height="wrap_content" 
+	    android:text="@string/integer"
+	    />
+</TableRow>
+<TableRow android:layout_width="wrap_content" android:layout_height="wrap_content">
+    <TextView 
+    	android:text="@string/hex" 
+    	android:layout_height="wrap_content" android:layout_width="wrap_content" 
+    	android:paddingRight="10dp"/>
+    <EditText 
+    	android:id="@+id/integer_hex" 
+    	android:layout_height="wrap_content" android:layout_width="wrap_content" 
+    	android:text="ABC"/>
+</TableRow>
+<TableRow android:layout_width="wrap_content" android:layout_height="wrap_content">
+    <TextView 
+    	android:text="@string/dec" 
+    	android:layout_height="wrap_content" android:layout_width="wrap_content" 
+    	android:paddingRight="10dp"/>
+    <EditText 
+    	android:id="@+id/integer_dec" 
+    	android:layout_height="wrap_content" android:layout_width="wrap_content" 
+    	android:text="2748"/>
+</TableRow>
+
+
+</TableLayout>
+</LinearLayout>

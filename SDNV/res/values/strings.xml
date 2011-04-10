@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sdnv">SDNV</string>
+    <string name="integer">Integer</string>
+    <string name="hex">Hex:</string>
+    <string name="dec">Dec:</string>
+    <string name="app_name">SDNV</string>
+</resources>
