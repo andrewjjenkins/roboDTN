@@ -6,6 +6,8 @@ SDNV/bin
 SDNV/gen
 SDNVTest/bin
 SDNVTest/gen
+sdnvlib/bin
+sdnvlib/gen
 
 
 # Android stuff that's only useful locally
@@ -17,9 +19,12 @@ SDNV/local.properties
 SDNV/proguard.cfg
 SDNVTest/local.properties
 SDNVTest/proguard.cfg
+sdnvlib/local.properties
+sdnvlib/proguard.cfg
 
 # Eclipse stuff we don't need to check in.
 roboDTN/.settings/org.eclipse.jdt.core.prefs
 roboDTNTest/.settings/org.eclipse.jdt.core.prefs
 SDNV/.settings/org.eclipse.jdt.core.prefs
 SDNVTest/.settings/org.eclipse.jdt.core.prefs
+sdnvlib/.settings/org.eclipse.jdt.core.prefs
