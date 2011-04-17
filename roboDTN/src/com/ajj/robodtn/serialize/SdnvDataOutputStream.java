@@ -19,7 +19,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import com.ajj.robodtn.Sdnv;
+import com.ajj.robodtn.sdnvlib.Sdnv;
 
 public class SdnvDataOutputStream extends DataOutputStream {
 	

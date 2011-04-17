@@ -16,7 +16,9 @@
 package com.ajj.robodtn.test;
 
 import junit.framework.TestCase;
-import com.ajj.robodtn.Sdnv;
+
+import com.ajj.robodtn.sdnvlib.Sdnv;
+
 import java.util.Arrays;
 
 public class SdnvTest extends TestCase {

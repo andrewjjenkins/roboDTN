@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package com.ajj.robodtn;
+package com.ajj.robodtn.sdnvlib;
 
 public class Sdnv {
 	public Sdnv() {
