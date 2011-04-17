@@ -18,7 +18,7 @@ package com.ajj.robodtn.db;
 import java.util.Date;
 
 import com.ajj.robodtn.Bundle;
-import com.ajj.robodtn.dtnUtil;
+import com.ajj.robodtn.sdnvlib.dtnUtil;
 
 import android.content.ContentValues;
 import android.database.SQLException;

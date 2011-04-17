@@ -21,7 +21,7 @@ import java.io.InputStream;
 import java.util.List;
 
 import com.ajj.robodtn.BundleBlock;
-import com.ajj.robodtn.dtnUtil;
+import com.ajj.robodtn.sdnvlib.dtnUtil;
 import com.ajj.robodtn.Bundle;
 import com.ajj.robodtn.Malformity;
 import com.ajj.robodtn.acquire.BpAcquisitionStream;

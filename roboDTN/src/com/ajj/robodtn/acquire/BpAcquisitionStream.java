@@ -23,6 +23,8 @@ import java.util.Date;
 import com.ajj.robodtn.Bundle;
 import com.ajj.robodtn.BundleBlock;
 import com.ajj.robodtn.Malformity;
+import com.ajj.robodtn.sdnvlib.SdnvDataInputStream;
+import com.ajj.robodtn.sdnvlib.dtnUtil;
 
 public class BpAcquisitionStream extends SdnvDataInputStream {
 
@@ -59,7 +61,7 @@ public class BpAcquisitionStream extends SdnvDataInputStream {
 			
 			/* Read the creation timestamp and convert into a date.
 			 * arg to Date() is milliseconds since 1970 */
-			b.createTimestamp = new Date((readSdnv() + Bundle.DTNEPOCH) * 1000);
+			b.createTimestamp = new Date((readSdnv() + dtnUtil.DTNEPOCH) * 1000);
 			
 			/* Read more of the PBB */
 			b.createSeq = readSdnv();

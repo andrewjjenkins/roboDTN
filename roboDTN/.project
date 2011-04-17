@@ -32,6 +32,11 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>sdnvlib</name>
+			<type>2</type>
+			<location>/home/andrew/workspace/roboDTN/sdnvlib</location>
+		</link>
+		<link>
 			<name>sdnvlib_src</name>
 			<type>2</type>
 			<locationURI>_android_sdnvlib_74569c0c/src</locationURI>

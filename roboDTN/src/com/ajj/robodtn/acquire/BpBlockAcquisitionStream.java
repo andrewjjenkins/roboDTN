@@ -21,6 +21,7 @@ import java.io.InputStream;
 
 import com.ajj.robodtn.BundleBlock;
 import com.ajj.robodtn.Malformity;
+import com.ajj.robodtn.sdnvlib.SdnvDataInputStream;
 
 public class BpBlockAcquisitionStream extends SdnvDataInputStream {
 	public BpBlockAcquisitionStream(InputStream in) {

@@ -22,6 +22,7 @@ import java.lang.String;
 
 import com.ajj.robodtn.Bundle;
 import com.ajj.robodtn.Malformity;
+import com.ajj.robodtn.sdnvlib.SdnvDataInputStream;
 
 public class AcquireBundleDict {
 	public AcquireBundleDict(SdnvDataInputStream stream) throws IOException, MalformedBundleException {

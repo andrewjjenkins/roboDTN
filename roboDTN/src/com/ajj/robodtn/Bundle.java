@@ -40,9 +40,7 @@ public class Bundle {
 	public static final long RPTDLV =         1 << 17;
 	public static final long RPTDEL =         1 << 18;
 	
-	/* Number of seconds difference between the DTN epoch (1/1/2000) and the
-	 * UNIX epoch (1/1/1970) */
-	public static final long DTNEPOCH = 	 946684800;
+
 	public static final int  VERSION_RFC5050 =      6;
 	
 	

@@ -19,7 +19,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
 import com.ajj.robodtn.Bundle;
-import com.ajj.robodtn.dtnUtil;
+import com.ajj.robodtn.sdnvlib.dtnUtil;
 import com.ajj.robodtn.serialize.MalformedEidException;
 import com.ajj.robodtn.serialize.SerializedDictionary;
 

@@ -22,8 +22,9 @@ import java.util.Iterator;
 
 import com.ajj.robodtn.Bundle;
 import com.ajj.robodtn.BundleBlock;
-import com.ajj.robodtn.dtnUtil;
 import com.ajj.robodtn.sdnvlib.Sdnv;
+import com.ajj.robodtn.sdnvlib.SdnvDataOutputStream;
+import com.ajj.robodtn.sdnvlib.dtnUtil;
 
 public class TransmitBundle extends SdnvDataOutputStream {
 	

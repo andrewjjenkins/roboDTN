@@ -13,13 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package com.ajj.robodtn;
+package com.ajj.robodtn.sdnvlib;
 
 import java.util.Date;
 
 import android.text.format.Time;
 
 public final class dtnUtil {
+	/* Number of seconds difference between the DTN epoch (1/1/2000) and the
+	 * UNIX epoch (1/1/1970) */
+	public static final long DTNEPOCH = 	 946684800;
+	
 	public static Date iso8601ToDate(String isoDate) {
 		Time t = new Time();
 		t.parse3339(isoDate);
@@ -27,11 +31,11 @@ public final class dtnUtil {
 	}
 	
 	public static long DateToDtnShortDate(Date normalDate) {
-		return normalDate.getTime()/1000 - Bundle.DTNEPOCH;
+		return normalDate.getTime()/1000 - DTNEPOCH;
 	}
 	
 	public static Date DtnShortDateToDate(long dtnShortDate) {
-		return new Date((dtnShortDate + Bundle.DTNEPOCH) * 1000);
+		return new Date((dtnShortDate + DTNEPOCH) * 1000);
 	}
 	
 	public static byte[] hexStringToByteArray(String sWithWhitespace) {

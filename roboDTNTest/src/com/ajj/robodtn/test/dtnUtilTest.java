@@ -16,7 +16,7 @@
 package com.ajj.robodtn.test;
 
 import junit.framework.TestCase;
-import com.ajj.robodtn.dtnUtil;
+import com.ajj.robodtn.sdnvlib.dtnUtil;
 import java.util.Arrays;
 
 public class dtnUtilTest extends TestCase {

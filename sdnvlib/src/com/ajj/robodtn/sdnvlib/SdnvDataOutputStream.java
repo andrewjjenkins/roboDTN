@@ -13,33 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package com.ajj.robodtn.acquire;
+package com.ajj.robodtn.sdnvlib;
 
-import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.OutputStream;
 
-public class SdnvDataInputStream extends DataInputStream {
+
+public class SdnvDataOutputStream extends DataOutputStream {
 	
-	public SdnvDataInputStream(InputStream in) {
-		super(in);
+	public SdnvDataOutputStream (OutputStream out) {
+		super(out);
 	}
 	
-	public long readSdnv() throws IOException {
-		long v = 0;
-		int i;
-		int b;
-		
-		for(i = 0; i < 10; i++)
-		{
-			if (v > Long.MAX_VALUE>>7) {
-				throw new NumberFormatException("SDNV is bigger than " + Long.MAX_VALUE);
-			}
-			b = readUnsignedByte();
-			v <<=7;
-			v |= b & 0x7F;
-			if ((b & 0x80) == 0) return v;
-		}
-		throw new NumberFormatException("SDNV was too long");
+	public void writeSdnv(Sdnv s) throws IOException {
+		write(s.getBytes(), 0, s.getBytes().length);
 	}
+	
+	public void writeSdnv(long l) throws IOException {
+		Sdnv s = new Sdnv(l);
+		write(s.getBytes(), 0, s.getBytes().length);
+	}
+
 }

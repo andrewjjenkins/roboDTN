@@ -23,7 +23,8 @@ import android.test.InstrumentationTestCase;
 
 import com.ajj.robodtn.Bundle;
 import com.ajj.robodtn.BundleBlock;
-import com.ajj.robodtn.dtnUtil;
+import com.ajj.robodtn.sdnvlib.dtnUtil;
+import com.ajj.robodtn.test.ComparisonStream;
 import com.ajj.robodtn.serialize.MalformedEidException;
 import com.ajj.robodtn.serialize.TransmitBundle;
 
