@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package com.ajj.robodtn.test;
+package com.ajj.robodtn.sdnvlibTest;
 
 import junit.framework.TestCase;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-import com.ajj.robodtn.acquire.SdnvDataInputStream;
-import com.ajj.robodtn.test.SdnvTest;
+import com.ajj.robodtn.sdnvlib.SdnvDataInputStream;
+import com.ajj.robodtn.sdnvlibTest.SdnvTest;
 
 public class SdnvDataInputStreamTest extends TestCase {
 	public void testSdnvs() throws IOException {

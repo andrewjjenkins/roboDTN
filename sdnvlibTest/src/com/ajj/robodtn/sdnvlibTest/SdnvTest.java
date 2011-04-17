@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package com.ajj.robodtn.test;
+package com.ajj.robodtn.sdnvlibTest;
 
 import junit.framework.TestCase;
 
-import com.ajj.robodtn.sdnvlib.Sdnv;
-
 import java.util.Arrays;
+
+import android.text.TextUtils.StringSplitter;
+
+import com.ajj.robodtn.sdnvlib.Sdnv;
 
 public class SdnvTest extends TestCase {
 
@@ -93,5 +95,12 @@ public class SdnvTest extends TestCase {
 			Sdnv fromBytes = new Sdnv(indextestpairs[i].bytes, indextestpairs[i].index);
 			assertTrue(fromBytes.getValue() == indextestpairs[i].value);
 		}
+	}
+	
+	public void testSdnvStrings() {
+		Sdnv s = new Sdnv(0xABC);
+		String str = s.getBytesAsHexString();
+		
+		assertEquals("953c", str);
 	}
 }
