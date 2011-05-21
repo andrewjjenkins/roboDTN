@@ -5,7 +5,7 @@
     <string name="hex">Hex:</string>
     <string name="dec">Dec:</string>
     <string name="app_name">SDNV</string>
-    <string name="datelabel">Dated</string>
+    <string name="datelabel">Date</string>
     <string name="emptydate">1 Jan 2000 00:45:48 GMT</string>
     <string name="gmt">GMT:</string>
     <string name="local">Local:</string>
