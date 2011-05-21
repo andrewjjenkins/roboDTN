@@ -70,7 +70,10 @@ public class SdnvTest extends TestCase {
 		//Other test pairs.
 		new SdnvTestPair(0x90,
 						 new byte [] {(byte) 0x81, (byte) 0x10},
-						 "8110")
+						 "8110"),
+		new SdnvTestPair(0,
+						 new byte [] {(byte) 0x00},
+						 "0")
 	};
 	
 
