@@ -28,10 +28,10 @@ public class SdnvApp extends Activity {
     	SdnvEditText integerHexText = (SdnvEditText) findViewById(R.id.integer_hex);
     	SdnvEditText integerDecText = (SdnvEditText) findViewById(R.id.integer_dec);
     	
-    	sdnvHexText.setupSdnv(Type.SDNV_HEX, sdnv, this);
-    	sdnvDecText.setupSdnv(Type.SDNV_DEC, sdnv, this);
-    	integerHexText.setupSdnv(Type.INTEGER_HEX, sdnv, this);
-    	integerDecText.setupSdnv(Type.INTEGER_DEC, sdnv, this);
+    	sdnvHexText.setupSdnv(Type.SDNV_HEX, this);
+    	sdnvDecText.setupSdnv(Type.SDNV_DEC, this);
+    	integerHexText.setupSdnv(Type.INTEGER_HEX, this);
+    	integerDecText.setupSdnv(Type.INTEGER_DEC, this);
     	updateDates();
     }
     

@@ -1,7 +1,5 @@
 package com.ajj.robodtn.sdnv;
 
-import com.ajj.robodtn.sdnvlib.Sdnv;
-
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -51,15 +49,7 @@ public class SdnvEditText extends EditText {
 		}
 	}
 
-	public void setupSdnv(Type type, Sdnv sdnv, SdnvApp parent) {
-		this.type = type;
-		this.sdnv = sdnv;
-		this.parent = parent;
-		
+	public void setupSdnv(Type type, SdnvApp parent) {
 		this.addTextChangedListener(new SdnvEditWatcher(parent, type));
 	}
-	
-	private Type type = null;
-	private Sdnv sdnv = null;
-	private SdnvApp parent = null;
 }
