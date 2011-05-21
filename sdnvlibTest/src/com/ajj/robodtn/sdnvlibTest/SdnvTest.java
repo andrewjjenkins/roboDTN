@@ -16,11 +16,7 @@
 package com.ajj.robodtn.sdnvlibTest;
 
 import junit.framework.TestCase;
-
 import java.util.Arrays;
-
-import android.text.TextUtils.StringSplitter;
-
 import com.ajj.robodtn.sdnvlib.Sdnv;
 
 public class SdnvTest extends TestCase {
@@ -30,22 +26,51 @@ public class SdnvTest extends TestCase {
 	}
 	
 	public static class SdnvTestPair {
-		public SdnvTestPair(long value, byte [] bytes) {
+		public SdnvTestPair(long value, byte [] bytes, String byteString) {
 			this.value = value;
 			this.bytes = bytes;
+			this.byteString = byteString;
 		}
 		public long value;
 		public byte [] bytes;
+		public String byteString;
 	}
 	
 	public static final SdnvTestPair [] testpairs = new SdnvTestPair [] {
-		new SdnvTestPair(0xABC,  new byte [] {(byte) 0x95, (byte) 0x3C}),				//RFC5050 test 1, SDNV i-d test 1
-		new SdnvTestPair(0x1234, new byte [] {(byte) 0xA4, (byte) 0x34}),				//RFC5050 test 2, SDNV i-d test 2
-		new SdnvTestPair(0x4234, new byte [] {(byte) 0x81, (byte) 0x84, (byte) 0x34}),	//RFC5050 test 3, SDNV i-d test 3
-		new SdnvTestPair(0x01, new byte [] {(byte) 0x01}),								//SDNV i-d ex. 1
-		new SdnvTestPair(128, new byte [] {(byte) 0x81, (byte) 0x00}),					//SDNV i-d ex. 2
-		new SdnvTestPair(0x7F, new byte [] {(byte) 0x7F}),								//SDNV test 4
-		new SdnvTestPair(0x90, new byte [] {(byte) 0x81, (byte) 0x10})
+		//RFC5050 test 1, SDNV i-d test 1
+		new SdnvTestPair(0xABC,  
+						 new byte [] {(byte) 0x95, (byte) 0x3C},
+						 "953c"),
+
+		//RFC5050 test 2, SDNV i-d test 2
+		new SdnvTestPair(0x1234, 
+						 new byte [] {(byte) 0xA4, (byte) 0x34},
+						 "a434"),
+						 
+		//RFC5050 test 3, SDNV i-d test 3
+		new SdnvTestPair(0x4234,
+						 new byte [] {(byte) 0x81, (byte) 0x84, (byte) 0x34},
+						 "818434"),
+						 
+		//SDNV i-d ex. 1
+		new SdnvTestPair(0x01, 
+						 new byte [] {(byte) 0x01},
+						 "1"),
+
+		//SDNV i-d ex. 2
+		new SdnvTestPair(128,
+						 new byte [] {(byte) 0x81, (byte) 0x00},
+						 "8100"),
+						 
+		//SDNV test 4						 
+		new SdnvTestPair(0x7F, 
+						 new byte [] {(byte) 0x7F},
+					 	 "7f"),
+					 	 
+		//Other test pairs.
+		new SdnvTestPair(0x90,
+						 new byte [] {(byte) 0x81, (byte) 0x10},
+						 "8110")
 	};
 	
 
@@ -54,12 +79,18 @@ public class SdnvTest extends TestCase {
 		// Verify SDNV conversions.
 		for(int i = 0; i < testpairs.length; i++) {
 			Sdnv fromBytes = new Sdnv(testpairs[i].bytes);
-			assertTrue(Arrays.equals(fromBytes.getBytes(), testpairs[i].bytes));
+			byte [] fromBytesArray = fromBytes.getBytes();
+			String asHexString = fromBytes.getBytesAsHexString();
+			assertTrue(Arrays.equals(fromBytesArray, testpairs[i].bytes));
 			assertTrue(fromBytes.getValue() == testpairs[i].value);
+			assertEquals(testpairs[i].byteString, asHexString);
+			fromBytes.setByBytesString(testpairs[i].byteString, 16);
+			assertEquals(testpairs[i].value, fromBytes.getValue());
 			
 			Sdnv fromValue = new Sdnv(testpairs[i].value);
 			assertTrue(Arrays.equals(fromValue.getBytes(), testpairs[i].bytes));
 			assertTrue(fromValue.getValue() == testpairs[i].value);
+			assertEquals(testpairs[i].byteString, fromValue.getBytesAsHexString());
 		}
 		
 		// Verify that updating an SDNV works.

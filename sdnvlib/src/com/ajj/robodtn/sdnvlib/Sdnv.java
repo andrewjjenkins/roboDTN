@@ -15,11 +15,13 @@
  ******************************************************************************/
 package com.ajj.robodtn.sdnvlib;
 
+import java.math.BigInteger;
+
 public class Sdnv {
 	public Sdnv() {
 		value = 0;
-		bytes = new byte[1];
-		bytes[0] = 0x00;
+		bytesInt = new BigInteger(0, zeroArray);
+		bytes = zeroArray;
 	}
 	
 	public Sdnv(long value) {
@@ -32,6 +34,10 @@ public class Sdnv {
 	
 	public Sdnv(byte [] bytes, int index) {
 		setByBytes(bytes, index);
+	}
+	
+	public Sdnv(String bytesString, int radix) {
+		setByBytesString(bytesString, radix);
 	}
 	
 	public long getValue() {
@@ -50,8 +56,17 @@ public class Sdnv {
 		return bytes;
 	}
 	
+	public String getBytesAsHexString() {
+		return bytesInt.toString(16);
+	}
+	
+	public String getBytesAsString() {
+		return bytesInt.toString();
+	}
+	
 	public void setByBytes(byte [] bytes, int index) {
 		long v = 0;
+		BigInteger b = new BigInteger(0, zeroArray);
 		int i;
 		
 		for(i = index; i < bytes.length; i++)
@@ -59,17 +74,40 @@ public class Sdnv {
 			if (v > Long.MAX_VALUE>>7) {
 				throw new NumberFormatException("SDNV is bigger than " + Long.MAX_VALUE);
 			}
+			
+			/* Store lower 7 bits to v */
 			v <<=7;
 			v |= bytes[i] & 0x7F;
+			
+			/* Store all 8 bits to b */
+			b = b.shiftLeft(8).or(new BigInteger(1, new byte [] { bytes[i] }));
+			
+			/* See if we must keep going. */
 			if ((bytes[i] & 0x80) == 0) break;
 		}
 		
 		value = v;
-		this.bytes = bytes;
+		this.bytesInt = b;
+		bytesIntToBytes();
 	}
 	
 	public void setByBytes(byte [] bytes) {
 		setByBytes(bytes, 0);
+	}
+	
+	public void setByBytesString(String bytes, int radix) {
+		BigInteger b = new BigInteger(bytes, radix);
+		byte [] bAsBytes = b.toByteArray();
+		if (bAsBytes[0] == 0x00) {
+			setByBytes(bAsBytes, 1);
+		} else {
+			setByBytes(bAsBytes, 0);
+		}
+	}
+	
+	public boolean equals(Sdnv rhs) {
+		if(value == rhs.value) return true;
+		return false;
 	}
 	
 	private void valueToBytes() {
@@ -88,10 +126,25 @@ public class Sdnv {
 		} while (v > 0);
 		
 		// Allocate a new correctly-sized array for bytes and copy into it.
-		bytes = new byte[i];
-		System.arraycopy(myBytes, maxSdnvByteArray-i, bytes, 0, i);
+		byte [] sizedBytes = new byte[i];
+		System.arraycopy(myBytes, maxSdnvByteArray-i, sizedBytes, 0, i);
+		bytesInt = new BigInteger(1, sizedBytes);
+		bytesIntToBytes();
+	}
+	
+	private void bytesIntToBytes() {
+		byte [] ba = bytesInt.toByteArray();
+		int numZeros = 0;
+		
+		for(numZeros = 0; ba[numZeros] == 0x00; numZeros++);
+		
+		bytes = new byte [ba.length - numZeros];
+		System.arraycopy(ba, numZeros, bytes, 0, ba.length - numZeros);
 	}
 	
 	private byte [] bytes;
+	private BigInteger bytesInt;
 	private long value;
+	
+	private static final byte [] zeroArray = new byte [] { 0x00 };
 }
