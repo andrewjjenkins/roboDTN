@@ -1,6 +1,11 @@
 package com.ajj.robodtn.db;
 
+import java.util.Iterator;
+import java.util.List;
+
+import com.ajj.robodtn.Bundle;
 import com.ajj.robodtn.BundleBlock;
+import com.ajj.robodtn.BundleBlocks;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -75,7 +80,7 @@ public class BundleBlockDbWrapper {
 				+ block.type + ", " + block.flags + ", " + block.len + ", "
 				+ block.position + ") for bundleID " + bundleId);
 	}
-	
+
 	public BundleBlock retrieveBundleBlock(long bundleId, int type, long position) throws NotFoundInDbException {
 		SQLiteQueryBuilder q = queryForBlock(bundleId, type, position);
 		
@@ -128,5 +133,52 @@ public class BundleBlockDbWrapper {
 				TYPE_COL + "=" + type + " AND " + POSITION_COL + "=" + position);
 		
 		return q;
+	}
+	
+	public BundleBlocks retrieveBundleBlocks(long bundleId) throws NotFoundInDbException {
+		SQLiteDatabase db = mDbOpener.getReadableDatabase();
+		SQLiteQueryBuilder q = queryForBlocks(bundleId);
+		
+		Cursor c = q.query(db, RETRIEVEBLOCK_PROJECTION, 
+					null, null,
+					null, null, 
+					POSITION_COL + " ASC");
+		
+		if (c == null || !c.moveToFirst()) {
+			throw new NotFoundInDbException("Couldn't find any blocks for bundleId " + bundleId);
+		}
+		
+		BundleBlocks blocks = new BundleBlocks();
+		
+		do {
+			BundleBlock block = new BundleBlock();
+			block.type = c.getInt(TYPE_COL_INDEX);
+			block.position = c.getInt(POSITION_COL_INDEX);
+			block.flags = c.getLong(BLOCKFLAGS_COL_INDEX);
+			block.len = c.getLong(LEN_COL_INDEX);
+			block.payload = c.getBlob(DATA_COL_INDEX);
+			blocks.addBlock(block);
+			c.moveToNext();
+		} while (!c.isAfterLast());
+		
+		return blocks;
+	}
+	
+	private SQLiteQueryBuilder queryForBlocks(long bundleId) {
+		SQLiteQueryBuilder q = new SQLiteQueryBuilder();
+		
+		q.setTables(BLOCK_TABLE_NAME);
+		
+		q.appendWhere(BUNDLE_ID_COL + "=" + bundleId);
+		
+		return q;
+	}
+	
+	public void insertBundleBlocks(long bundleId, Bundle b) {
+		List<BundleBlock> blocks = b.blocks.getBlocksInOrder();
+		for(Iterator<BundleBlock> i = blocks.iterator(); i.hasNext(); ) {
+			BundleBlock bb = i.next();
+			insertBlock(bb, bundleId);
+		}
 	}
 }

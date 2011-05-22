@@ -5,9 +5,11 @@ import java.util.Arrays;
 import android.test.AndroidTestCase;
 
 import com.ajj.robodtn.BundleBlock;
+import com.ajj.robodtn.BundleBlocks;
 import com.ajj.robodtn.db.BundleBlockDbWrapper;
 import com.ajj.robodtn.db.DbOpener;
 import com.ajj.robodtn.db.NotFoundInDbException;
+import com.ajj.robodtn.test.BpAcquisitionStreamTest.AcquisitionTestPair;
 
 public class BundleBlockDbWrapperTest extends AndroidTestCase {
 
@@ -54,6 +56,30 @@ public class BundleBlockDbWrapperTest extends AndroidTestCase {
 			assertEquals(expected.flags, retrieved.flags);
 			assertEquals(expected.len, retrieved.len);
 			assertTrue(Arrays.equals(expected.payload, retrieved.payload));
+		}
+	}
+	
+	public void testRetrieveBundleBlocks () {
+		DbOpener dbOpener = new DbOpener(getContext(), true);
+		BundleBlockDbWrapper db = dbOpener.bundleBlockDbWrapper;
+		
+		/* Insert blocks from test bundles. */
+		AcquisitionTestPair [] tps = BpAcquisitionStreamTest.testpairs;
+		for(int i = 0; i < tps.length; i++) {
+			db.insertBundleBlocks(i, tps[i].bundle);
+		}
+		
+		/* Retrieve blocks from test bundles. */
+		for(int i = 0; i < tps.length; i++) {
+			BundleBlocks expected = tps[i].bundle.blocks;
+			BundleBlocks retrieved = null;
+			try {
+				retrieved = db.retrieveBundleBlocks(i);
+			} catch (NotFoundInDbException e) {
+				fail("Couldn't find blocks for test bundle #" + i + " (" 
+						+ tps[i].acqAsset + ")");
+			}
+			assertTrue(expected.equals(retrieved));
 		}
 	}
 }
