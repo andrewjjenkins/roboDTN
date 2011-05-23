@@ -76,4 +76,7 @@
     -->
     <setup />
 
+<!-- Fix an Ant warning -->
+<property name="build.sysclasspath" value="ignore" />
+
 </project>

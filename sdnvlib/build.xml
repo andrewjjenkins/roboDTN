@@ -80,5 +80,7 @@
 <path id="android.libraries.src"><path refid="project.libraries.src" /></path>
 <path id="android.libraries.jars"><path refid="project.libraries.jars" /></path>
 
+<!-- Fix an Ant warning -->
+<property name="build.sysclasspath" value="ignore" />
 
 </project>
