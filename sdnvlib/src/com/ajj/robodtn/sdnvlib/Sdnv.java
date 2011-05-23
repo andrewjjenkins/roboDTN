@@ -135,6 +135,12 @@ public class Sdnv {
 	private void bytesIntToBytes() {
 		byte [] ba = bytesInt.toByteArray();
 		
+		/* If there is one byte and it is 0, then we're done. */
+		if (ba.length == 1 && ba[0] == 0x00) {
+			bytes = ba;
+			return;
+		}
+		
 		/* Otherwise, strip leading zeros from the byte array. */
 		int numZeros;
 		for(numZeros = 0; ba[numZeros] == 0x00; numZeros++);
