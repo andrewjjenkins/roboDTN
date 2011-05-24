@@ -32,12 +32,14 @@ import android.test.InstrumentationTestCase;
 
 public class BpAcquisitionStreamTest extends InstrumentationTestCase {
 	public static class AcquisitionTestPair {
-		public AcquisitionTestPair(String acqAsset, Bundle bundle) {
+		public AcquisitionTestPair(String acqAsset, Bundle bundle, String bundleToString) {
 			this.acqAsset = acqAsset;
 			this.bundle = bundle;
+			this.bundleToString = bundleToString;
 		}
 		public String acqAsset;
 		public Bundle bundle;
+		public String bundleToString;
 	}
 	
 	public static final AcquisitionTestPair [] testpairs;
@@ -52,7 +54,8 @@ public class BpAcquisitionStreamTest extends InstrumentationTestCase {
 					new BundleBlock(BundleBlock.TYPE_PAYLOAD,
 									BundleBlock.POSITION_PAYLOAD,
 									BundleBlock.MUSTCOPY | BundleBlock.LAST,
-									"here is a test bundle".getBytes("US-ASCII"))})),
+									"here is a test bundle".getBytes("US-ASCII"))}),
+			"Bundle (ipn:1.0, 27 Apr 2009 00:05:47 GMT, 1, 21)"),
 		new AcquisitionTestPair("testbundles/dtn2bundle",
 			new Bundle(0x90, "dtn://destination/app", "dtn://syme.dtn/source", 
 					"dtn://syme.dtn/source", "dtn:none", 
@@ -61,7 +64,8 @@ public class BpAcquisitionStreamTest extends InstrumentationTestCase {
 					new BundleBlock(BundleBlock.TYPE_PAYLOAD,
 									BundleBlock.POSITION_PAYLOAD,
 									BundleBlock.LAST,
-									"here is a bundle from DTN2".getBytes("US-ASCII"))})),
+									"here is a bundle from DTN2".getBytes("US-ASCII"))}),
+			"Bundle (dtn://syme.dtn/source, 30 Jan 2011 02:24:16 GMT, 2, 26)"),
 		new AcquisitionTestPair("testbundles/ionbundle-with-ecos",
 			new Bundle(0x110, "ipn:1.1", "ipn:1.2", "dtn:none", "dtn:none",
 					dtnUtil.iso8601ToDate("2011-04-01T21:36:18Z"),
@@ -73,7 +77,8 @@ public class BpAcquisitionStreamTest extends InstrumentationTestCase {
 					new BundleBlock(BundleBlock.TYPE_PAYLOAD,
 									BundleBlock.POSITION_PAYLOAD,
 									BundleBlock.MUSTCOPY | BundleBlock.LAST,
-									"Hey hey here's a bundle\0".getBytes("US-ASCII"))}))
+									"Hey hey here's a bundle\0".getBytes("US-ASCII"))}),
+			"Bundle (ipn:1.2, 1 Apr 2011 21:36:18 GMT, 1, 24)")
 	};
 	} catch (UnsupportedEncodingException e) {
 		throw new RuntimeException(e);
@@ -99,6 +104,7 @@ public class BpAcquisitionStreamTest extends InstrumentationTestCase {
 			assertEquals(b.createTimestamp, tp.bundle.createTimestamp);
 			assertEquals(b.createSeq, tp.bundle.createSeq);
 			assertEquals(b.lifetime, tp.bundle.lifetime);
+			assertEquals(b.toString(), tp.bundleToString);
 			
 			List<BundleBlock> bbs = b.blocks.getBlocksInOrder();
 			List<BundleBlock> tpbs = tp.bundle.blocks.getBlocksInOrder();

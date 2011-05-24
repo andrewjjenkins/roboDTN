@@ -102,9 +102,9 @@ public class Bundle {
 		}
 		
 		if ((procFlags & FRAG) != 0x00) {
-			return "Bundle frag (" + src + ", " + createTimestamp + ", " + createSeq + ", (+" + fragOffset + ") " + payloadLength + "/" + aduLength + ")";
+			return "Bundle frag (" + src + ", " + createTimestamp.toGMTString() + ", " + createSeq + ", (+" + fragOffset + ") " + payloadLength + "/" + aduLength + ")";
 		} else {
-			return "Bundle (" + src + ", " + createTimestamp + ", " + createSeq + ", " + payloadLength + ")";
+			return "Bundle (" + src + ", " + createTimestamp.toGMTString() + ", " + createSeq + ", " + payloadLength + ")";
 		}
 	}
 }
