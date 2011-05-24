@@ -94,4 +94,17 @@ public class Bundle {
 	public Bundle() {
 		
 	}
+	
+	public String toString() {
+		long payloadLength = -1;
+		if (blocks != null && blocks.hasBlock(BundleBlock.TYPE_PAYLOAD)) {
+			payloadLength = blocks.get(BundleBlock.TYPE_PAYLOAD).get(0).len;
+		}
+		
+		if ((procFlags & FRAG) != 0x00) {
+			return "Bundle frag (" + src + ", " + createTimestamp + ", " + createSeq + ", (+" + fragOffset + ") " + payloadLength + "/" + aduLength + ")";
+		} else {
+			return "Bundle (" + src + ", " + createTimestamp + ", " + createSeq + ", " + payloadLength + ")";
+		}
+	}
 }
