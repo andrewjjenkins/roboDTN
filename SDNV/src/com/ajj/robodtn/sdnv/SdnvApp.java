@@ -19,7 +19,6 @@ package com.ajj.robodtn.sdnv;
 import java.util.Date;
 import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.text.format.DateUtils;
@@ -65,22 +64,26 @@ public class SdnvApp extends Activity {
     	// Set up buttons for picking the date and associate handlers.
     	mPickGmtDate.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				showDialog(ID_DIALOG_GMTDATEPICK);
+				new DatePickerDialog(SdnvApp.this, gmtdate_callback, 
+						gmtTime.year, gmtTime.month, gmtTime.monthDay).show();
 			}
 		});
     	mPickGmtTime.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				showDialog(ID_DIALOG_GMTTIMEPICK);
+				new TimePickerDialog(SdnvApp.this, gmttime_callback,
+						gmtTime.hour, gmtTime.minute, false).show();
 			}
 		});
     	mPickLocalDate.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				showDialog(ID_DIALOG_LOCALDATEPICK);
+				new DatePickerDialog(SdnvApp.this, localdate_callback,
+						localTime.year, localTime.month, localTime.monthDay).show();
 			}
 		});
     	mPickLocalTime.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				showDialog(ID_DIALOG_LOCALTIMEPICK);
+				new TimePickerDialog(SdnvApp.this, localtime_callback,
+						localTime.hour, localTime.minute, false).show();
 			}
 		});
     }
@@ -162,27 +165,7 @@ public class SdnvApp extends Activity {
     	pickLocalDate.setText(DateUtils.formatDateTime(this, localTime.toMillis(false), dateFlags));
     	pickLocalTime.setText(DateUtils.formatDateTime(this, localTime.toMillis(false), timeFlags));
     }
-    
-    @Override
-    protected Dialog onCreateDialog(int id)	{    	
-    	switch(id) {
-    	case ID_DIALOG_GMTDATEPICK:
-    			return new DatePickerDialog(this, gmtdate_callback, 
-    						gmtTime.year, gmtTime.month, gmtTime.monthDay);
-		case ID_DIALOG_GMTTIMEPICK:
-    			return new TimePickerDialog(this, gmttime_callback,
-    						gmtTime.hour, gmtTime.minute, false);
-    	case ID_DIALOG_LOCALDATEPICK:
-    			return new DatePickerDialog(this, localdate_callback,
-    						localTime.year, localTime.month, localTime.monthDay);
-    	case ID_DIALOG_LOCALTIMEPICK:
-    			return new TimePickerDialog(this, localtime_callback,
-    						localTime.hour, localTime.minute, false);
-    	default:
-    			throw new RuntimeException("Unknown dialog id " + id + " requested");
-    	}
-    }
-    
+      
     protected DatePickerDialog.OnDateSetListener gmtdate_callback = 
     	new DatePickerDialog.OnDateSetListener() {
 		
@@ -229,6 +212,7 @@ public class SdnvApp extends Activity {
 		updateDatesFromNumbers();
 	}
     
+	// Private state
     private Sdnv sdnv;
     private Type updatingFrom;
     private Time gmtTime;
@@ -243,11 +227,4 @@ public class SdnvApp extends Activity {
 	Button		 mPickGmtTime;
 	Button		 mPickLocalDate;
 	Button		 mPickLocalTime;
-    
-    
-    // The date/time picker dialog IDs.
-    private static final int ID_DIALOG_GMTDATEPICK = 1;
-    private static final int ID_DIALOG_GMTTIMEPICK = 2;
-    private static final int ID_DIALOG_LOCALDATEPICK = 3;
-    private static final int ID_DIALOG_LOCALTIMEPICK = 4;   
 }
