@@ -33,6 +33,22 @@ import com.ajj.robodtn.sdnvlib.Sdnv;
 import com.ajj.robodtn.sdnvlib.dtnUtil;
 
 public class SdnvApp extends Activity {
+	// Private state
+    private Sdnv sdnv;
+    private Type updatingFrom;
+    private Time gmtTime;
+    private Time localTime;
+
+    // Widgets
+	private SdnvEditText mSdnvHexText;
+	private SdnvEditText mSdnvDecText;
+	private SdnvEditText mIntegerHexText;
+	private SdnvEditText mIntegerDecText;
+	private Button		 mPickGmtDate;
+	private Button		 mPickGmtTime;
+	private Button		 mPickLocalDate;
+	private Button		 mPickLocalTime;
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,6 +104,10 @@ public class SdnvApp extends Activity {
 		});
     }
     
+    /** When sdnv is updated, this function is called to cause all of the UI
+     * representations of sdnv to be updated as well. 
+     * @param updatedFrom	Which UI element triggered the update; prevents loops.
+     */
     public void update(Type updatedFrom) {
     	if (updatingFrom != Type.NONE) { return; }
 
@@ -142,6 +162,7 @@ public class SdnvApp extends Activity {
     	updatingFrom = Type.NONE;
     }
     
+    /** Updates the date/time representations of sdnv. */
     private void updateDatesFromNumbers() {
     	// Formats are the same as the Android calendar "EditEvent"
     	final int dateFlags = DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR |
@@ -149,23 +170,19 @@ public class SdnvApp extends Activity {
 			DateUtils.FORMAT_ABBREV_WEEKDAY;
     	final int timeFlags = DateUtils.FORMAT_SHOW_TIME;
     	
-    	Button pickGmtDate = (Button) findViewById(R.id.pickgmtdate);
-    	Button pickGmtTime = (Button) findViewById(R.id.pickgmttime);
-    	Button pickLocalDate = (Button) findViewById(R.id.picklocaldate);
-    	Button pickLocalTime = (Button) findViewById(R.id.picklocaltime);
-    	
     	// Set our representations of time.
     	gmtTime.set(dtnUtil.DtnShortDateToDate(sdnv.getValue()).getTime());
     	localTime.set(gmtTime);
     	localTime.switchTimezone(Time.getCurrentTimezone());
 
     	// Set the labels on the date/time picker buttons.
-    	pickGmtDate.setText(DateUtils.formatDateTime(this, gmtTime.toMillis(false), dateFlags | DateUtils.FORMAT_UTC));
-    	pickGmtTime.setText(DateUtils.formatDateTime(this, gmtTime.toMillis(false), timeFlags | DateUtils.FORMAT_UTC));
-    	pickLocalDate.setText(DateUtils.formatDateTime(this, localTime.toMillis(false), dateFlags));
-    	pickLocalTime.setText(DateUtils.formatDateTime(this, localTime.toMillis(false), timeFlags));
+    	mPickGmtDate.setText(DateUtils.formatDateTime(this, gmtTime.toMillis(false), dateFlags | DateUtils.FORMAT_UTC));
+    	mPickGmtTime.setText(DateUtils.formatDateTime(this, gmtTime.toMillis(false), timeFlags | DateUtils.FORMAT_UTC));
+    	mPickLocalDate.setText(DateUtils.formatDateTime(this, localTime.toMillis(false), dateFlags));
+    	mPickLocalTime.setText(DateUtils.formatDateTime(this, localTime.toMillis(false), timeFlags));
     }
-      
+    
+    /** Callback when the user is done setting a GMT date (from mPickGmtDate) */
     protected DatePickerDialog.OnDateSetListener gmtdate_callback = 
     	new DatePickerDialog.OnDateSetListener() {
 		
@@ -176,6 +193,7 @@ public class SdnvApp extends Activity {
 		}
 	};
 	
+	/** Callback when the user is done setting a GMT time (from mPickGmtTime) */
 	protected TimePickerDialog.OnTimeSetListener gmttime_callback =
 		new TimePickerDialog.OnTimeSetListener() {
 			
@@ -185,6 +203,7 @@ public class SdnvApp extends Activity {
 		}
 	};
 	
+	/** Callback when the user is done setting a Local date (from mPickLocalDate) */
     protected DatePickerDialog.OnDateSetListener localdate_callback = 
     	new DatePickerDialog.OnDateSetListener() {
 		
@@ -195,6 +214,7 @@ public class SdnvApp extends Activity {
 		}
 	};
 	
+	/** Callback when the user is done setting a Local time (from mPickLocalTime) */
 	protected TimePickerDialog.OnTimeSetListener localtime_callback =
 		new TimePickerDialog.OnTimeSetListener() {
 			
@@ -204,27 +224,11 @@ public class SdnvApp extends Activity {
 		}
 	};
 	
-	
+	/** Helper that date/time setter callbacks use to update the sdnv and representations. */
 	protected void setSdnvFromTime(Time time) {
 		long newValue = dtnUtil.DateToDtnShortDate(new Date(time.toMillis(false)));
 		sdnv.setByValue(newValue);
 		update(Type.DATE);
 		updateDatesFromNumbers();
 	}
-    
-	// Private state
-    private Sdnv sdnv;
-    private Type updatingFrom;
-    private Time gmtTime;
-    private Time localTime;
-    
-    // Widgets
-	SdnvEditText mSdnvHexText;
-	SdnvEditText mSdnvDecText;
-	SdnvEditText mIntegerHexText;
-	SdnvEditText mIntegerDecText;
-	Button		 mPickGmtDate;
-	Button		 mPickGmtTime;
-	Button		 mPickLocalDate;
-	Button		 mPickLocalTime;
 }
