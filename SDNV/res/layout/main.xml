@@ -26,6 +26,7 @@
     	android:paddingRight="10dp"/>
     <com.ajj.robodtn.sdnv.SdnvEditText 
     	android:id="@+id/sdnv_hex" 
+    	android:layout_span="2"
     	android:layout_height="wrap_content" android:layout_width="wrap_content" 
     	android:text="953C"/>
 </TableRow>
@@ -36,6 +37,7 @@
     	android:paddingRight="10dp"/>
     <com.ajj.robodtn.sdnv.SdnvEditText 
     	android:id="@+id/sdnv_dec" 
+    	android:layout_span="2"
     	android:layout_height="wrap_content" android:layout_width="wrap_content" 
     	android:text="38204"/>
 </TableRow>
@@ -55,6 +57,7 @@
     	android:paddingRight="10dp"/>
     <com.ajj.robodtn.sdnv.SdnvEditText 
     	android:id="@+id/integer_hex" 
+    	android:layout_span="2"
     	android:layout_height="wrap_content" android:layout_width="wrap_content" 
     	android:text="ABC"/>
 </TableRow>
@@ -65,6 +68,7 @@
     	android:paddingRight="10dp"/>
     <com.ajj.robodtn.sdnv.SdnvEditText 
     	android:id="@+id/integer_dec" 
+    	android:layout_span="2"
     	android:layout_height="wrap_content" android:layout_width="wrap_content" 
     	android:text="2748"/>
 </TableRow>
@@ -76,22 +80,24 @@
     	android:text="@string/gmt" 
     	android:layout_height="wrap_content" android:layout_width="wrap_content" 
     	android:paddingRight="10dp"/>
-	<TextView
-		android:id="@+id/gmtdate"
-		android:text="@string/emptydate"
-		android:layout_span="2"
-		android:layout_height="wrap_content" android:layout_width="wrap_content"/>
+    <Button android:id="@+id/pickgmtdate"
+    	android:text="@string/emptydate"
+    	android:layout_height="wrap_content" android:layout_width="wrap_content"/>
+    <Button android:id="@+id/pickgmttime"
+    	android:text="@string/emptydate"
+    	android:layout_height="wrap_content" android:layout_width="wrap_content"/>
 </TableRow>
 <TableRow android:layout_width="wrap_content" android:layout_height="wrap_content">
     <TextView 
     	android:text="@string/local" 
     	android:layout_height="wrap_content" android:layout_width="wrap_content" 
     	android:paddingRight="10dp"/>
-	<TextView
-		android:id="@+id/localdate"
-		android:text="@string/emptydate"
-		android:layout_span="2"
-		android:layout_height="wrap_content" android:layout_width="wrap_content"/>
+   	<Button android:id="@+id/picklocaldate"
+    	android:text="@string/emptydate"
+    	android:layout_height="wrap_content" android:layout_width="wrap_content"/>
+    <Button android:id="@+id/picklocaltime"
+    	android:text="@string/emptydate"
+    	android:layout_height="wrap_content" android:layout_width="wrap_content"/>
 </TableRow>
 </TableLayout>
 </LinearLayout>

@@ -27,7 +27,8 @@ public class SdnvEditText extends EditText {
 		SDNV_HEX,
 		SDNV_DEC,
 		INTEGER_HEX,
-		INTEGER_DEC
+		INTEGER_DEC,
+		DATE
 	};
 	
 	public SdnvEditText(Context context, AttributeSet attrs, int defStyle) {
