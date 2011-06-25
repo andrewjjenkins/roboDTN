@@ -24,7 +24,6 @@ import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.text.format.Time;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -46,38 +45,40 @@ public class SdnvApp extends Activity {
         gmtTime = new Time("GMT");
         localTime = new Time();
         
-		SdnvEditText sdnvHexText    = (SdnvEditText) findViewById(R.id.sdnv_hex);
-    	SdnvEditText sdnvDecText    = (SdnvEditText) findViewById(R.id.sdnv_dec);
-    	SdnvEditText integerHexText = (SdnvEditText) findViewById(R.id.integer_hex);
-    	SdnvEditText integerDecText = (SdnvEditText) findViewById(R.id.integer_dec);
+        // Find widgets
+		mSdnvHexText    = (SdnvEditText) findViewById(R.id.sdnv_hex);
+    	mSdnvDecText    = (SdnvEditText) findViewById(R.id.sdnv_dec);
+    	mIntegerHexText = (SdnvEditText) findViewById(R.id.integer_hex);
+    	mIntegerDecText = (SdnvEditText) findViewById(R.id.integer_dec);
+    	mPickGmtDate    = (Button) findViewById(R.id.pickgmtdate);
+    	mPickGmtTime    = (Button) findViewById(R.id.pickgmttime);
+    	mPickLocalDate  = (Button) findViewById(R.id.picklocaldate);
+    	mPickLocalTime  = (Button) findViewById(R.id.picklocaltime);
     	
-    	sdnvHexText.setupSdnv(Type.SDNV_HEX, this);
-    	sdnvDecText.setupSdnv(Type.SDNV_DEC, this);
-    	integerHexText.setupSdnv(Type.INTEGER_HEX, this);
-    	integerDecText.setupSdnv(Type.INTEGER_DEC, this);
+    	// Set up edit boxes to call this.update when edited.
+    	mSdnvHexText.setupSdnv(Type.SDNV_HEX, this);
+    	mSdnvDecText.setupSdnv(Type.SDNV_DEC, this);
+    	mIntegerHexText.setupSdnv(Type.INTEGER_HEX, this);
+    	mIntegerDecText.setupSdnv(Type.INTEGER_DEC, this);
     	updateDatesFromNumbers();
 
-    	// Create buttons for picking the date and associate handlers.
-    	Button		 pickGmtDate    = (Button) findViewById(R.id.pickgmtdate);
-    	Button		 pickGmtTime    = (Button) findViewById(R.id.pickgmttime);
-    	Button		 pickLocalDate  = (Button) findViewById(R.id.picklocaldate);
-    	Button		 pickLocalTime  = (Button) findViewById(R.id.picklocaltime);
-    	pickGmtDate.setOnClickListener(new View.OnClickListener() {
+    	// Set up buttons for picking the date and associate handlers.
+    	mPickGmtDate.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				showDialog(ID_DIALOG_GMTDATEPICK);
 			}
 		});
-    	pickGmtTime.setOnClickListener(new View.OnClickListener() {
+    	mPickGmtTime.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				showDialog(ID_DIALOG_GMTTIMEPICK);
 			}
 		});
-    	pickLocalDate.setOnClickListener(new View.OnClickListener() {
+    	mPickLocalDate.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				showDialog(ID_DIALOG_LOCALDATEPICK);
 			}
 		});
-    	pickLocalTime.setOnClickListener(new View.OnClickListener() {
+    	mPickLocalTime.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				showDialog(ID_DIALOG_LOCALTIMEPICK);
 			}
@@ -86,12 +87,6 @@ public class SdnvApp extends Activity {
     
     public void update(Type updatedFrom) {
     	if (updatingFrom != Type.NONE) { return; }
-    	
-		SdnvEditText sdnvHexText    = (SdnvEditText) findViewById(R.id.sdnv_hex);
-    	SdnvEditText sdnvDecText    = (SdnvEditText) findViewById(R.id.sdnv_dec);
-    	SdnvEditText integerHexText = (SdnvEditText) findViewById(R.id.integer_hex);
-    	SdnvEditText integerDecText = (SdnvEditText) findViewById(R.id.integer_dec);
-
 
     	/* See if the new text requires updating the other fields.
     	 * If mustUpdate is still false after this block, then the new text
@@ -100,25 +95,25 @@ public class SdnvApp extends Activity {
     	boolean mustUpdate = false;
     	try {
     	if (updatedFrom == Type.INTEGER_DEC) {
-    		long newValue = Long.parseLong(integerDecText.getText().toString(), 10);
+    		long newValue = Long.parseLong(mIntegerDecText.getText().toString(), 10);
     		if (newValue != sdnv.getValue()) {
     			sdnv.setByValue(newValue);
     			mustUpdate = true;
     		}
     	} else if (updatedFrom == Type.INTEGER_HEX) {
-    		long newValue = Long.parseLong(integerHexText.getText().toString(), 16);
+    		long newValue = Long.parseLong(mIntegerHexText.getText().toString(), 16);
     		if (newValue != sdnv.getValue()) {
     			sdnv.setByValue(newValue);
     			mustUpdate = true;
     		}
     	} else if (updatedFrom == Type.SDNV_HEX) {
-    		Sdnv newSdnv = new Sdnv(sdnvHexText.getText().toString(), 16);
+    		Sdnv newSdnv = new Sdnv(mSdnvHexText.getText().toString(), 16);
     		if (newSdnv.equals(sdnv) == false) {
     			sdnv = newSdnv;
     			mustUpdate = true;
     		}
     	} else if (updatedFrom == Type.SDNV_DEC) {
-    		Sdnv newSdnv = new Sdnv(sdnvDecText.getText().toString(), 10);
+    		Sdnv newSdnv = new Sdnv(mSdnvDecText.getText().toString(), 10);
     		if (newSdnv.equals(sdnv) == false) {
     			sdnv = newSdnv;
     			mustUpdate = true;
@@ -136,10 +131,10 @@ public class SdnvApp extends Activity {
     	 * EditTexts; when their textChangedListeners call back to this
     	 * function, we'll see that updatingFrom != NONE, and short-circuit. */
     	updatingFrom = updatedFrom;
-       	if (updatingFrom != Type.INTEGER_DEC) { integerDecText.setText(Long.toString(sdnv.getValue())); }
-    	if (updatingFrom != Type.INTEGER_HEX) { integerHexText.setText(Long.toHexString(sdnv.getValue())); }
-    	if (updatingFrom != Type.SDNV_DEC) { sdnvDecText.setText(sdnv.getBytesAsString()); }
-    	if (updatingFrom != Type.SDNV_HEX) { sdnvHexText.setText(sdnv.getBytesAsHexString()); }
+       	if (updatingFrom != Type.INTEGER_DEC) { mIntegerDecText.setText(Long.toString(sdnv.getValue())); }
+    	if (updatingFrom != Type.INTEGER_HEX) { mIntegerHexText.setText(Long.toHexString(sdnv.getValue())); }
+    	if (updatingFrom != Type.SDNV_DEC) { mSdnvDecText.setText(sdnv.getBytesAsString()); }
+    	if (updatingFrom != Type.SDNV_HEX) { mSdnvHexText.setText(sdnv.getBytesAsHexString()); }
     	updateDatesFromNumbers();
     	updatingFrom = Type.NONE;
     }
@@ -238,6 +233,17 @@ public class SdnvApp extends Activity {
     private Type updatingFrom;
     private Time gmtTime;
     private Time localTime;
+    
+    // Widgets
+	SdnvEditText mSdnvHexText;
+	SdnvEditText mSdnvDecText;
+	SdnvEditText mIntegerHexText;
+	SdnvEditText mIntegerDecText;
+	Button		 mPickGmtDate;
+	Button		 mPickGmtTime;
+	Button		 mPickLocalDate;
+	Button		 mPickLocalTime;
+    
     
     // The date/time picker dialog IDs.
     private static final int ID_DIALOG_GMTDATEPICK = 1;
