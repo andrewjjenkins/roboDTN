@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="com.ajj.robodtn"
+      package="net.robodtn"
       android:versionCode="1"
       android:versionName="1.0">
 <uses-permission android:name="android.permission.INTERNET"></uses-permission>
@@ -27,10 +27,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".cla.UdpConvergenceLayer" 
+        <service android:name=".cla.UdpConvergenceLayer"
         		 android:process=":remote">
         		 <intent-filter>
-        		 	<action android:name="com.ajj.robodtn.cla.UdpConvergenceLayer" />
+                     <action android:name="net.robodtn.cla.UdpConvergenceLayer" />
         		 </intent-filter>
         </service>
 

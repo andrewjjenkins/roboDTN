@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="com.ajj.robodtn.test"
+      package="net.robodtn.test"
       android:versionCode="1"
       android:versionName="1.0">
     <application android:icon="@drawable/icon" android:label="@string/app_name">
@@ -23,5 +23,5 @@
     <uses-library android:name="android.test.runner" />
     </application>
 
-    <instrumentation android:targetPackage="com.ajj.robodtn" android:name="android.test.InstrumentationTestRunner" />
+    <instrumentation android:targetPackage="net.robodtn" android:name="android.test.InstrumentationTestRunner" />
 </manifest> 
