@@ -35,6 +35,16 @@
         </service>
 
     </application>
+    
+    <application android:icon="@drawable/icon" android:label="@string/testdump" android:debuggable="true">
+    	<activity android:name=".app.TestDumpApp"
+    			  android:label="@string/testdump">
+    		<intent-filter>
+    			<action android:name="android.intent.action.MAIN" />
+    			<category android:name="android.intent.category.LAUNCHER" />
+    		</intent-filter>		  
+    	</activity>
+    </application>
 
 
 </manifest> 

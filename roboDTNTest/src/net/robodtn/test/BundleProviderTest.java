@@ -15,37 +15,42 @@
  ******************************************************************************/
 package net.robodtn.test;
 
-import android.test.AndroidTestCase;
+import android.content.ContentResolver;
+import android.test.ProviderTestCase2;
 
 import net.robodtn.Bundle;
 import net.robodtn.db.BundleAlreadyInDbException;
-import net.robodtn.db.BundleDbWrapper;
-import net.robodtn.db.DbOpener;
+import net.robodtn.db.BundleProvider;
+
 import net.robodtn.db.NotFoundInDbException;
 
-public class BundleDbWrapperTest extends AndroidTestCase {
+public class BundleProviderTest extends ProviderTestCase2<BundleProvider> {
 
-	public void testBundleDbWrapper () throws BundleAlreadyInDbException {
-		DbOpener dbOpener = new DbOpener(getContext(), true);
-		BundleDbWrapper db = dbOpener.bundleDbWrapper;
+	public BundleProviderTest() {
+		super(BundleProvider.class, BundleProvider.authority);
+	}
+	
+	public void testBundleProvider () throws BundleAlreadyInDbException {
+		
+		ContentResolver cr = getMockContentResolver();
 		
 		/* Verify that these bundles are not already in the database. */
 		for(int i = 0; i < BpAcquisitionStreamTest.testpairs.length; i++) {
 			Bundle b = BpAcquisitionStreamTest.testpairs[i].bundle;
-			assertFalse(db.isBundleInserted(b.src, b.createTimestamp, b.createSeq));
+			assertFalse(BundleProvider.isBundleInserted(cr, b.src, b.createTimestamp, b.createSeq));
 		}
 		
 		/* Insert bundles. */
 		for(int i = 0; i < BpAcquisitionStreamTest.testpairs.length; i++) {
 			Bundle insertedBundle = BpAcquisitionStreamTest.testpairs[i].bundle;
-			db.insertBundle(insertedBundle);
+			BundleProvider.insertBundle(cr, insertedBundle);
 		}
 		
 		/* Check that these bundles are inserted. */
 		for(int i = 0; i < BpAcquisitionStreamTest.testpairs.length; i++) {
 			Bundle b = BpAcquisitionStreamTest.testpairs[i].bundle;
-			assertTrue(db.isBundleInserted(b.src, b.createTimestamp, b.createSeq));
-		}		
+			assertTrue(BundleProvider.isBundleInserted(cr, b.src, b.createTimestamp, b.createSeq));
+		}
 		
 		/* Verify that we extract matching bundles. */
 		for(int i = 0; i < BpAcquisitionStreamTest.testpairs.length; i++) {
@@ -55,9 +60,9 @@ public class BundleDbWrapperTest extends AndroidTestCase {
 			
 			/* Retrieve the bundle from the database. */
 			try {
-				retrieved = db.retrieveBundle(expected.src,
-											  expected.createTimestamp,
-											  expected.createSeq);
+				retrieved = BundleProvider.queryBundle(cr, expected.src,
+												 expected.createTimestamp,
+												 expected.createSeq);
 			} catch (NotFoundInDbException e) {
 				fail("Couldn't find bundle #" + i + " (" + expected.src
 						+ ", " + expected.createTimestamp 
@@ -83,7 +88,7 @@ public class BundleDbWrapperTest extends AndroidTestCase {
 			
 			/* Retrieve the bundle from the database. */
 			try {
-				db.insertBundle(dupInsert);
+				BundleProvider.insertBundle(cr, dupInsert);
 			} catch (BundleAlreadyInDbException e) {
 				continue;
 			}
