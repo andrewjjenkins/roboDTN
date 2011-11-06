@@ -17,4 +17,7 @@
 <resources>
     <string name="hello">Hello World, roboDTN!</string>
     <string name="app_name">roboDTN</string>
+    <string name="empty">empty</string>
+    <string name="dtnnone">dtn:none</string>
+    <string name="testdump">Test Bundle Dump</string>
 </resources>

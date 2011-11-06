@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView android:id="@+id/scrollView1"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+<ExpandableListView android:id="@+id/expandableListView1" 
+        			android:layout_height="match_parent" 
+        			android:layout_width="match_parent">
+    <TextView android:id="@+id/destEid"
+              android:layout_height="fill_parent"
+              android:layout_width="fill_parent"
+              android:text="@string/dtnnone" />
+    <TextView android:id="@+id/sourceEid"
+              android:layout_height="fill_parent"
+              android:layout_width="fill_parent"
+              android:text="@string/dtnnone" />
+    <TextView android:id="@+id/reporttoEid"
+              android:layout_height="fill_parent"
+              android:layout_width="fill_parent"
+              android:text="@string/dtnnone" />
+    <TextView android:id="@+id/custodianEid"
+              android:layout_height="fill_parent"
+              android:layout_width="fill_parent"
+              android:text="@string/dtnnone" />
+</ExpandableListView>
+</ScrollView>
