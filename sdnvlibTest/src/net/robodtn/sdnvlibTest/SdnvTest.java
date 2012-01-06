@@ -137,4 +137,15 @@ public class SdnvTest extends TestCase {
 		
 		assertEquals("953c", str);
 	}
+	
+	public void testSdnvNegative() {
+		boolean caughtNegativeException = false;
+		try {
+			@SuppressWarnings("unused")	// No sensible value for "s"; it better be an exception.
+			Sdnv s = new Sdnv(-1);
+		} catch (NumberFormatException e) {
+			caughtNegativeException = true;
+		}
+		assertTrue(caughtNegativeException);
+	}
 }

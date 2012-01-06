@@ -120,13 +120,23 @@ public class SdnvApp extends Activity {
     	if (updatedFrom == Type.INTEGER_DEC) {
     		long newValue = Long.parseLong(mIntegerDecText.getText().toString(), 10);
     		if (newValue != sdnv.getValue()) {
-    			sdnv.setByValue(newValue);
+    			try {
+    				sdnv.setByValue(newValue);
+    			} catch (NumberFormatException e) {
+    				// Reject negative numbers.
+    				mIntegerDecText.setText(Long.toString(sdnv.getValue()));
+    			}
     			mustUpdate = true;
     		}
     	} else if (updatedFrom == Type.INTEGER_HEX) {
     		long newValue = Long.parseLong(mIntegerHexText.getText().toString(), 16);
     		if (newValue != sdnv.getValue()) {
-    			sdnv.setByValue(newValue);
+    			try {
+    				sdnv.setByValue(newValue);
+    			} catch (NumberFormatException e) {
+    				// Reject negative numbers.
+    				mIntegerHexText.setText(Long.toString(sdnv.getValue(), 16));
+    			}
     			mustUpdate = true;
     		}
     	} else if (updatedFrom == Type.SDNV_HEX) {
@@ -227,7 +237,9 @@ public class SdnvApp extends Activity {
 	/** Helper that date/time setter callbacks use to update the sdnv and representations. */
 	protected void setSdnvFromTime(Time time) {
 		long newValue = dtnUtil.DateToDtnShortDate(new Date(time.toMillis(false)));
-		sdnv.setByValue(newValue);
+		try {
+			sdnv.setByValue(newValue);
+		} catch (NumberFormatException e) { /* Do nothing; updates below override junk date. */ }
 		update(Type.DATE);
 		updateDatesFromNumbers();
 	}
