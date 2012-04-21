@@ -25,7 +25,6 @@ public class BundleProvider extends ContentProvider {
 	public static final String authority = "net.robodtn.db.BundleProvider";
 	public static final int BY_BUNDLE_URI = 1;
 	public static final int BY_BUNDLEROW_URI = 2;
-	public static final Uri BUNDLEROW_URI = Uri.parse("content://" + authority + "/row");
 	
 	public static final String BUNDLE_TABLE_NAME = "bundles";
 	public static final String ID_COL = "_id";
@@ -60,7 +59,7 @@ public class BundleProvider extends ContentProvider {
 	public static final String BUNDLE_TABLE_DROP =
 		"DROP TABLE IF EXISTS " + BUNDLE_TABLE_NAME;
 	
-	private static final String [] RETRIEVEBUNDLE_PROJECTION = new String [] {
+	public static final String [] RETRIEVEBUNDLE_PROJECTION = new String [] {
 		ID_COL,
 		PROCFLAGS_COL,
 		DST_COL,
@@ -111,9 +110,13 @@ public class BundleProvider extends ContentProvider {
 	
 	public static Uri uriFromId(String src, long createTimestamp, long createSeq) {
 		return Uri.parse("content://" + authority + 
-				"/" + Uri.encode(src) + 
+				"/nonfrag/" + Uri.encode(src) + 
 				"/" + createTimestamp +
 				"/" + createSeq);
+	}
+	
+	public static Uri uriFromRow(long rowId) {
+		return Uri.parse("content://" + authority + "/bydbrow/" + rowId);
 	}
 	
 	@Override
@@ -150,7 +153,7 @@ public class BundleProvider extends ContentProvider {
 		
 		if (rowId > 0) {
 			Log.d("BundleProvider", "inserted bundle " + uri.toString());
-			Uri bundleUri = ContentUris.withAppendedId(BUNDLEROW_URI, rowId);
+			Uri bundleUri = uriFromRow(rowId);
 			getContext().getContentResolver().notifyChange(bundleUri, null);
 			return bundleUri;
 		}
@@ -231,12 +234,16 @@ public class BundleProvider extends ContentProvider {
 		
 		String whereClause = null;
 		String [] whereArgs = null;
+		List<String> pathSegments = uri.getPathSegments();
 		
 		switch (uriMatcher.match(uri)) {
 		case BY_BUNDLE_URI:
-			List<String> pathSegments = uri.getPathSegments();
 			whereClause = SRC_COL + "=? AND " + CREATETIMESTAMP_COL + "=? AND " + CREATESEQ_COL + "=?";
-			whereArgs = new String [] { pathSegments.get(0), pathSegments.get(1), pathSegments.get(2) };
+			whereArgs = new String [] { pathSegments.get(1), pathSegments.get(2), pathSegments.get(3) };
+			break;
+		case BY_BUNDLEROW_URI:
+			whereClause = ID_COL + "=?";
+			whereArgs = new String [] { pathSegments.get(1) };
 			break;
 		default:
 			throw new IllegalArgumentException("Unknown URI " + uri);
@@ -263,13 +270,31 @@ public class BundleProvider extends ContentProvider {
 	public static Bundle queryBundle(ContentResolver cr, String srcEid, long dtnShortDate, long createSeq)
 		throws NotFoundInDbException
 	{
-		Cursor c = cr.query(uriFromId(srcEid, dtnShortDate, createSeq),
-						    RETRIEVEBUNDLE_PROJECTION,
-						    null, null, null);
+		Uri uri = uriFromId(srcEid, dtnShortDate, createSeq);
+		Cursor c = cr.query(uri, RETRIEVEBUNDLE_PROJECTION, null, null, null);
+		return cursorToBundle(c, uri);
+	}
+	
+	public static Bundle queryBundle(ContentResolver cr, String src, Date createTimestamp, long createSeq) 
+			throws NotFoundInDbException
+	{
+		return queryBundle(cr, src, dtnUtil.DateToDtnShortDate(createTimestamp), createSeq);
+	}
+	
+	public static Bundle queryBundle(ContentResolver cr, long id)
+			throws NotFoundInDbException
+	{
+		Uri uri = uriFromRow(id);
+		Cursor c = cr.query(uri, RETRIEVEBUNDLE_PROJECTION, null, null, null);
+		return cursorToBundle(c, uri);
+	}
+	
+	private static Bundle cursorToBundle(Cursor c, Uri uri)
+			throws NotFoundInDbException
+	{
 		
 		if (c == null || !c.moveToFirst()) {
-			throw new NotFoundInDbException("Couldn't find bundle ("
-					+ srcEid + ", " + dtnShortDate + ", " + createSeq + ")");
+			throw new NotFoundInDbException("Couldn't find bundle " + uri.toString());
 		}
 		
 		Bundle b = new Bundle();
@@ -292,12 +317,6 @@ public class BundleProvider extends ContentProvider {
 		
 		return b;
 	}
-	
-	public static Bundle queryBundle(ContentResolver cr, String src, Date createTimestamp, long createSeq) 
-			throws NotFoundInDbException
-	{
-		return queryBundle(cr, src, dtnUtil.DateToDtnShortDate(createTimestamp), createSeq);
-	}
 
 	@Override
 	public int update(Uri uri, ContentValues values, String selection,
@@ -306,13 +325,13 @@ public class BundleProvider extends ContentProvider {
 		return 0;
 	}
 
-	private static final UriMatcher uriMatcher;
+	public static final UriMatcher uriMatcher;
 	private DbOpener dbOpener;
 	
 	static {
 		uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-		uriMatcher.addURI(authority, "*/*/*", BY_BUNDLE_URI);
-		uriMatcher.addURI(authority, "row/#", BY_BUNDLEROW_URI);
+		uriMatcher.addURI(authority, "nonfrag/*/*/*", BY_BUNDLE_URI);
+		uriMatcher.addURI(authority, "bydbrow/#", BY_BUNDLEROW_URI);
 		
 		bundleProjectionMap = new HashMap<String,String>();
 		bundleProjectionMap.put(ID_COL, ID_COL);

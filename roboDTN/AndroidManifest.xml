@@ -19,6 +19,24 @@
       android:versionCode="1"
       android:versionName="1.0">
 <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    
+    <application android:icon="@drawable/icon" android:label="@string/testdump" android:debuggable="true">
+    	<activity android:name=".app.TestDumpApp"
+    			  android:label="@string/testdump">
+    		<intent-filter>
+    			<action android:name="android.intent.action.MAIN" />
+    			<category android:name="android.intent.category.LAUNCHER" />
+    		</intent-filter>		  
+    	</activity>
+    	<activity class="app.DumpApp" android:label="@string/dumpapp" android:name=".app.DumpApp">
+            <intent-filter android:label="View Bundle">
+                <action android:name="android.intent.action.VIEW" />
+                <data android:scheme="content" android:host="net.robodtn.db.BundleProvider" android:pathPattern="bydbrow/*" />
+            </intent-filter>
+        </activity>
+    </application>
+    
+    
     <application android:icon="@drawable/icon" android:label="@string/app_name" android:debuggable="true">
         <activity android:name=".roboDTN"
                   android:label="@string/app_name">
@@ -34,17 +52,9 @@
         		 </intent-filter>
         </service>
 
+
     </application>
-    
-    <application android:icon="@drawable/icon" android:label="@string/testdump" android:debuggable="true">
-    	<activity android:name=".app.TestDumpApp"
-    			  android:label="@string/testdump">
-    		<intent-filter>
-    			<action android:name="android.intent.action.MAIN" />
-    			<category android:name="android.intent.category.LAUNCHER" />
-    		</intent-filter>		  
-    	</activity>
-    </application>
+
 
 
 </manifest> 
